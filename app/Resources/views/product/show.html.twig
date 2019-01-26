@@ -1,0 +1,87 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Product{% endblock %}
+
+{% block body %}
+        <div class="row">
+            <div class="col-md-12">
+                <h1><a href="{{ path('product_index') }}" class="btn btn-light">Retour</a> Produit : {{ product.label }}</h1>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-8">
+                <div class="row">
+                    <div class="col-md-6">
+                        {% if product.picture is not empty %}
+                            <img src="{{ asset(product.getPictureWebPath()) }}" class="img-fluid border border-dark">
+                        {% endif %}
+                    </div>
+                    <div class="col-md-6">
+                        <div class="row">
+                            <div class="col">
+                                <h2>{{ product.label }}</h2>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label>Référence :</label>
+                            </div>
+                            <div class="col-md-6">{{ product.reference }}</div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label>Catégorie :</label>
+                            </div>
+                            <div class="col-md-6">
+                                {% for category in product.categories %}
+                                    {% for cat in categoryRepo.getPath(category) %}
+                                        {{ cat.label }}
+                                        {% if loop.index != loop.last %}/{% endif %}
+                                    {% endfor %}
+                                    <br />
+                                {% endfor %}
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label>Rangement :</label>
+                            </div>
+                            <div class="col-md-6">
+                                {% if productInfoForUser is not null %}
+                                    {% for sto in storageRepo.getPath(productInfoForUser.storage) %}
+                                        {{ sto.label }}
+                                        {% if loop.index != loop.last %}/{% endif %}
+                                    {% endfor %}
+                                {% else %}
+                                    Aucun rangement définie
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <label>Description :</label><br />
+                        {{ product.description }}
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <p class="text-center"><a href="{{ path('product_edit', {'id': product.id}) }}" class="btn btn-warning">Modifier</a></p>
+                <h2>Disponibilité</h2>
+                <ul>
+                    {% if productInfoForUser is not null %}
+                        <li><b><label>Vous : </label> {{ productInfoForUser.quantity }}</b></li>
+                    {% endif %}
+                    {% for quantity in productQuantityAnotherUser %}
+                        <li><label>{{ quantity.user.firstName }} : </label> {{ quantity.quantity }}</li>
+                    {% endfor %}
+                </ul>
+                <h2>Prêts</h2>
+                <p>Aucun prêt pour ce produit</p>
+                <h2>Documentations liés</h2>
+            </div>
+        </div>
+
+    {#{{ include('product/_delete_form.html.twig') }}#}
+{% endblock %}

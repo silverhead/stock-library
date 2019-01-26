@@ -1,0 +1,39 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+<div class="row">
+    <div class="col-md-12">
+        <h1><a href="{{ path('storage_index') }}" class="btn btn-light">Retour</a> Rangement : "{{ storage.label }}"</h1>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <div class="row">
+            <div class="col-md-2">
+                {% if storage.picture is not empty %}
+                    <img src="{{ asset(storage.getPictureWebPath()) }}" class="img-fluid border border-dark">
+                {% endif %}
+            </div>
+            <div class="col-md-10">
+                <div class="row">
+                    <div class="col">
+                        <h2>{{ storage.label }}</h2>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <a href="{{ path('storage_edit', { 'id': storage.id }) }}" class="btn btn-warning">Modifier</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<br>
+<div class="row">
+    <div class="col-md-12">
+        <h2>Liste des produits pour ce rangement</h2>
+        {% include 'product/list.html.twig' with {'products': products } %}
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,57 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ parent() }} - Liste des catégories{% endblock %}
+
+{% block body %}
+<div class="row">
+    <div class="col-md-12">
+        <h1>Liste des catégories</h1>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <p>{% include 'common/addLink.html.twig' with {'path': path('category_new'), 'label': 'Ajouter une nouvelle catégorie'} %}</p>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Libellé</th>
+                    <th>Description</th>
+                    <th>Photo</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for category in categories %}
+                <tr>
+                    <td>
+                        {% for level in 0..category.lvl %}
+                            {% if level > 0 %}
+                            &nbsp;&nbsp;&nbsp;&nbsp;
+                            {% endif %}
+                        {% endfor %}
+                        {{ category.label }}</td>
+                    <td>{{ category.description }}</td>
+                    <td>
+                        {% if category.picture is not empty %}
+                            <img src="{{ asset(category.getPictureWebPath) }}" style="height:100px" />
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% include 'common/viewLink.html.twig' with {'path': path('category_show', {'id': category.id})} %}
+                        {% include 'common/editLink.html.twig' with {'path': path('category_edit', {'id': category.id})} %}
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="5">Pas de données</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,22 @@
+{{ form_start(form) }}
+<div class="row">
+    <div class="col-md-6">
+        {{ form_row(form.label, {'label': 'Libellé : ' }) }}
+    </div>
+    <div class="col-md-6">
+        {{ form_row(form.parent, {'label': 'Parent : '}) }}
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-6">
+        {{ form_row(form.pictureFile, {'label': 'Photo : ' }) }}
+    </div>
+    <div class="col-md-6">
+        {% if form.pictureFile.vars.attr.picturePath != '' %}
+            <img src="{{ asset(form.pictureFile.vars.attr.picturePath) }}" />
+        {% endif %}
+    </div>
+</div>
+        {{ form_widget(form) }}
+<input type="submit" class="btn btn-primary" value="{{ buttonLabel|default('Enregistrer') }}" />
+{{ form_end(form) }}

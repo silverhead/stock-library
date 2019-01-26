@@ -1,0 +1,52 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ parent() }} - Liste des rangements{% endblock %}
+
+{% block body %}
+<div class="row">
+    <div class="col-md-12">
+        <h1>Liste des rangements</h1>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <p>{% include 'common/addLink.html.twig' with { 'path': path('storage_new'), 'label': 'Ajouter un nouveau rangement'} %}</p>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <table class="table">
+            <thead>
+            <tr>
+                <th>Libellé</th>
+                <th>Photo</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for storage in storages %}
+                <tr>
+                    <td>
+                        {% for level in 0..storage.lvl %}
+                            {% if loop.index > 1 %}
+                                &nbsp;&nbsp;&nbsp;&nbsp;
+                            {% endif %}
+                        {% endfor %}
+                        {{ storage.label }}
+                    </td>
+                    <td>
+                        {% if storage.picture is not empty %}
+                            <img src="{{ asset(storage.getPictureWebPath()) }}" height="80">
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% include 'common/viewLink.html.twig' with {'path': path('storage_show', {'id': storage.id})} %}
+                        {% include 'common/editLink.html.twig' with {'path': path('storage_edit', {'id': storage.id})} %}
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

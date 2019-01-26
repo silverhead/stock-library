@@ -1,0 +1,16 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ parent() }} - Nouveau produit{% endblock %}
+
+{% block body %}
+    <div class="row">
+        <div class="col-md-12">
+            <h1><a href="{{ path('product_index') }}" class="btn btn-light">Retour</a> Nouveau produit</h1>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            {{ include('product/_form.html.twig', {'button_label': 'Enregistrer'}) }}
+        </div>
+    </div>
+{% endblock %}

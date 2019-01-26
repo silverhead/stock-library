@@ -1,0 +1,21 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Résultat de recherche pour : {{ search }}{% endblock %}
+
+{% block body %}
+
+    <div class="row">
+        <div class="col-md-12">
+            <h1>Résultat de recherche pour : "{{ search }}"</h1>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            {% if productList|length > 0 %}
+                {% include 'product/list.html.twig' with {'products': productList} %}
+            {% else %}
+                <p>Aucun résultat pour votre recherche.</p>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,49 @@
+# To get started with security, check out the documentation:
+# http://symfony.com/doc/current/security.html
+security:
+    encoders:
+        AppBundle\Entity\User: sha512
+    # http://symfony.com/doc/current/security.html#b-configuring-how-users-are-loaded
+    providers:
+        users_provider:
+            entity:
+                class: AppBundle:User
+    role_hierarchy:
+        ROLE_ADMIN:       ROLE_USER
+    firewalls:
+        # disables authentication for assets and the profiler, adapt it according to your needs
+        dev:
+            pattern: ^/(_(profiler|wdt)|css|images|js)/
+            security: false
+
+        main:
+            anonymous: ~
+            guard:
+                authenticators:
+                    - form_authenticator
+            logout:
+                path: /logout
+                target: /
+                invalidate_session: true
+            remember_me:
+                secret: %secret%
+                lifetime: 604800
+                path: /
+            #                name:      REMEMBERME
+            #                always_remember_me: true
+            #                delete_cookies:
+            #                    a: { path: null, domain: null }
+            #                    b: { path: null, domain: null }
+            #                handlers: [some.service.id, another.service.id]
+            #                success_handler: some.service.id
+            # activate different ways to authenticate
+
+            # http_basic: ~
+            # http://symfony.com/doc/current/security.html#a-configuring-how-your-users-will-authenticate
+
+            # form_login: ~
+    access_control:
+        - { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/forgot-password, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/change-password, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/, roles: [IS_AUTHENTICATED_REMEMBERED, ROLE_USER, ROLE_ADMIN] }

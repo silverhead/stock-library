@@ -1,0 +1,51 @@
+{{ form_start(form) }}
+<div class="row">
+    <div class="col-md-6">
+        {{ form_row(form.label, {'label': 'Libellé'}) }}
+    </div>
+    <div class="col-md-6">
+        {{ form_row(form.reference, {'label': 'Référence'}) }}
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-6">
+        {{ form_row(form.categories, {'label': 'Catégories'}) }}
+    </div>
+    <div class="col-md-6">
+        {{ form_row(form.storage, {'label': 'Rangé dans'}) }}
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-6">
+        {{ form_row(form.quantity, {'label': 'Quantité'}) }}
+    </div>
+    <div class="col-md-6">
+        {{ form_row(form.quantityLimitAlert, {'label': "Quantité limite d'alerte"}) }}
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        {{ form_row(form.keywords, {'label': 'Mots clefs'}) }}
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        {{ form_row(form.description, {'label': 'Description'}) }}
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-6">
+        {{ form_row(form.pictureFile, {'label': 'Photo'}) }}
+    </div>
+    <div class="col-md-6">
+        {% if form.pictureFile.vars.attr.picturePath != '' %}
+            <img src="{{ asset(form.pictureFile.vars.attr.picturePath) }}" />
+        {% endif %}
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <button class="btn btn-primary">{{ button_label|default('Enregistrer') }}</button>
+    </div>
+</div>
+{{ form_end(form) }}

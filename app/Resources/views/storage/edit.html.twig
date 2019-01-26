@@ -1,0 +1,14 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+<div class="row">
+    <div class="col-md-12">
+        <h1><a href="{{ path('storage_index') }}" class="btn btn-light">Retour</a> Modification du rangement</h1>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+    {% include 'storage/_form.html.twig' with {'form': edit_form, 'buttonLabel': 'Mettre à jour'} %}
+    </div>
+</div>
+{% endblock %}
