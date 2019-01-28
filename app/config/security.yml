@@ -23,7 +23,7 @@ security:
                     - form_authenticator
             logout:
                 path: /logout
-                target: /
+                target: /logoutuser
                 invalidate_session: true
             remember_me:
                 secret: %secret%

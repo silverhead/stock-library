@@ -23,7 +23,7 @@ use AppBundle\Form\SearchProductType;
 class ProductController extends Controller
 {
     /**
-     * @Route("/", name="product_index", methods="GET")
+     * @Route("/products", name="product_index", methods="GET")
      */
     public function index(): Response
     {

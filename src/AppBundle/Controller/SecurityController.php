@@ -10,6 +10,7 @@ class SecurityController extends Controller
 {
 
     /**
+     * @Route("/", name="home")
      * @Route("/login", name="login")
      */
     public function loginAction()
@@ -28,11 +29,12 @@ class SecurityController extends Controller
     }
 
     /**
-     * @Route("/logout", name="logout")
+     * @Route("/logoutuser", name="logout")
      */
     public function logoutAction()
     {
-
+        $this->addFlash('success',"Vous avez été déconnecté !");
+        return $this->redirectToRoute('login');
     }
 
     /**
