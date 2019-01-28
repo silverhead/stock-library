@@ -337,7 +337,7 @@ class Product
 
     public function getProductByUserFiltered(User $user)
     {
-        $productByUser = null;
+        $productByUser = new ArrayCollection();
         if($this->productByUser->count() > 0){
             $productByUser = $this->productByUser->filter(function($productByUser) use ($user){
                 return $productByUser->getUser() == $user;

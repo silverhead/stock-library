@@ -2,8 +2,10 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Entity\Document;
 use AppBundle\Entity\Product;
 use AppBundle\Entity\ProductByUser;
+use AppBundle\Form\DocumentType;
 use AppBundle\Form\Model\ProductModel;
 use AppBundle\Form\ProductModelType;
 use AppBundle\Form\ProductType;
@@ -74,12 +76,16 @@ class ProductController extends Controller
         $categoryRepo = $doctrine->getRepository('AppBundle:Category');
         $storageRepo = $doctrine->getRepository('AppBundle:Storage');
 
+        $documentForm = $this->createForm(DocumentType::class, new Document());
+
+
         return $this->render('product/show.html.twig', [
             'product' => $product,
             'productInfoForUser' => $productUserRepo->findOnceByProductAndUser($product, $this->getUser()),
             'productQuantityAnotherUser' => $productUserRepo->findAllByProductAndAnotherUser($product, $this->getUser()),
             'categoryRepo' => $categoryRepo,
-            'storageRepo' => $storageRepo
+            'storageRepo' => $storageRepo,
+            'documentForm' => $documentForm->createView()
         ]);
     }
 

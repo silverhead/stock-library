@@ -80,6 +80,8 @@
                 <h2>Prêts</h2>
                 <p>Aucun prêt pour ce produit</p>
                 <h2>Documentations liés</h2>
+                <p>{% include 'document/addButton.html.twig' %}</p>
+                {% include 'document/modalForm.html.twig' with { 'form': documentForm } %}
             </div>
         </div>
 

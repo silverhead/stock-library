@@ -11,13 +11,23 @@ class ProductRepository extends EntityRepository
 
     public function searchByLabel($search)
     {
-        return $this->createQueryBuilder('p')
+        $qb = $this->createQueryBuilder('p')
             ->where('p.label LIKE :label')
-            ->where('p.reference LIKE :label')
-            ->where('p.keywords LIKE :label')
-            ->where('p.description LIKE :label')
-            ->setParameter('label', '%'.$search.'%')
-            ->getQuery()->getResult();
+            ->setParameter("label", $search)
+            ->orWhere('p.reference LIKE :reference')
+            ->setParameter("reference", $search)
+        ;
+        $searchs = explode(" ", $search);
+
+        foreach ($searchs as $value){
+            $qb->orWhere("p.label LIKE :value")
+                ->orWhere("p.reference LIKE :value")
+                ->orWhere("p.keywords LIKE :value")
+                ->orWhere("p.description LIKE :value")
+                ->setParameter('value', '%'.$value.'%')
+            ;
+        }
+       return $qb->getQuery()->getResult();
     }
 
 
@@ -33,13 +43,19 @@ class ProductRepository extends EntityRepository
 
     public function findProductsByStorageAndUser(Storage $storage, User $user)
     {
+        $ids = $storage->getChildren()->map(function($child){
+            return $child->getId();
+        });
+
+        $ids->add($storage->getId());
+
         return $this->createQueryBuilder("p")
             ->select("p, pu")
             ->Join('p.productByUser', 'pu')
             ->where("pu.user = :user")
             ->setParameter("user", $user)
-            ->andWhere("pu.storage = :storage")
-            ->setParameter("storage", $storage)
+            ->andWhere("pu.storage in (:ids)")
+            ->setParameter("ids", implode(",", $ids->toArray()))
             ->getQuery()->getResult();
     }
 

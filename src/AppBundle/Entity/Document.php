@@ -73,7 +73,7 @@ class Document
     /**
      * @return string
      */
-    public function getTitle(): string
+    public function getTitle(): ?string
     {
         return $this->title;
     }
@@ -92,7 +92,7 @@ class Document
     /**
      * @return string
      */
-    public function getDescription(): string
+    public function getDescription(): ?string
     {
         return $this->description;
     }
@@ -111,7 +111,7 @@ class Document
     /**
      * @return string
      */
-    public function getFileName(): string
+    public function getFileName(): ?string
     {
         return $this->fileName;
     }
@@ -130,7 +130,7 @@ class Document
     /**
      * @return Product
      */
-    public function getProduct(): Product
+    public function getProduct(): ?Product
     {
         return $this->product;
     }
@@ -151,7 +151,7 @@ class Document
     /**
      * @return File
      */
-    public function getFile(): ?File
+    public function getFile(): ?UploadedFile
     {
         return $this->file;
     }
@@ -160,7 +160,7 @@ class Document
      * @param File $file
      * @return Document
      */
-    public function setFile(File $file): Document
+    public function setFile(UploadedFile $file): Document
     {
         $this->file = $file;
 
