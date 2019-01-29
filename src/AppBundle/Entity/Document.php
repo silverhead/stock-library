@@ -192,13 +192,13 @@ class Document
         }
 
         if (null !== $this->fileNameOld && '' !== $this->fileNameOld) {
-            if (is_file($this->getUploadRootPictureDir().'/'.$this->fileNameOld)){
-                unlink($this->getUploadRootPictureDir().'/'.$this->fileNameOld);
+            if (is_file($this->getUploadRootFileDir().'/'.$this->fileNameOld)){
+                unlink($this->getUploadRootFileDir().'/'.$this->fileNameOld);
                 $this->fileNameOld = null;
             }
         }
 
-        $this->getFile()->move($this->getUploadRootDir(), $this->file);
+        $this->getFile()->move($this->getUploadRootFileDir(), $this->fileName);
 
         $this->file = null;
     }
@@ -225,11 +225,11 @@ class Document
 
     public function getFileWebPath()
     {
-        if (null === $this->file || '' === $this->file){
+        if (null === $this->fileName || '' === $this->fileName){
             return null;
         }
         else{
-            return $this->getUploadFileDir().DIRECTORY_SEPARATOR.$this->file;
+            return $this->getUploadFileDir().DIRECTORY_SEPARATOR.$this->fileName;
         }
     }
 

@@ -41,8 +41,7 @@ class StorageController extends Controller
     {
         $storage = new Storage();
         $form = $this->createForm('AppBundle\Form\StorageType', $storage, array(
-            'user' => $this->getUser(),
-            'picturePath' => $storage->getPictureWebPath()
+            'user' => $this->getUser()
         ));
         $form->handleRequest($request);
 
@@ -99,8 +98,7 @@ class StorageController extends Controller
     {
         $deleteForm = $this->createDeleteForm($storage);
         $editForm = $this->createForm('AppBundle\Form\StorageType', $storage, array(
-            'user' => $this->getUser(),
-            'picturePath' => $storage->getPictureWebPath()
+            'user' => $this->getUser()
         ));
 
         $editForm->handleRequest($request);

@@ -13,6 +13,8 @@ class CategoryType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        $entity = $builder->getData();
+
         $builder
             ->add('label')
             ->add('description')
@@ -27,7 +29,10 @@ class CategoryType extends AbstractType
                 'choice_label' => 'label',
             ))
             ->add('pictureFile', FileType::class, [
-                'required' => false
+                'required' => false,
+                'attr' => array(
+                    'picturePath' => $entity->getPictureWebPath()
+                )
             ])
         ;
     }

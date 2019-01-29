@@ -16,6 +16,7 @@ class StorageType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $user = $options['user'];
+        $entity = $builder->getData();
 
         $builder->add('label')
             ->add('parent', EntityTreeType::class, array(
@@ -32,7 +33,7 @@ class StorageType extends AbstractType
             ->add('pictureFile', FileType::class, array(
                 'required' => false,
                 'attr' => array(
-                    'picturePath' => $options['picturePath']
+                    'picturePath' => $entity->getPictureWebPath()
                 )
             ));
     }
@@ -43,8 +44,7 @@ class StorageType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setRequired(array(
-            'user',
-            'picturePath'
+            'user'
         ))
             ->setDefaults(array(
             'data_class' => 'AppBundle\Entity\Storage'

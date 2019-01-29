@@ -1,4 +1,27 @@
 {{ form_start(form) }}
-    {{ form_widget(form) }}
-    <button class="btn">{{ button_label|default('Save') }}</button>
+<div class="row">
+    <div class="col-md-6">
+        {{ form_row(form.label, {'label': 'Libellé'}) }}
+    </div>
+    <div class="col-md-6">
+        {{ form_row(form.parent, {'label': 'Catégorie parente'}) }}
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        {{ form_row(form.description, {'label': 'Description'}) }}
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-6">
+        {{ form_row(form.pictureFile, {'label': 'Photo'}) }}
+    </div>
+    <div class="col-md-6">
+        {% if form.pictureFile.vars.attr.picturePath != "" %}
+            <img src="{{ asset(form.pictureFile.vars.attr.picturePath) }}" class="img-fluid border border-dark">
+        {% endif %}
+    </div>
+</div>
+
+    <button class="btn btn-primary">{{ button_label|default('Save') }}</button>
 {{ form_end(form) }}

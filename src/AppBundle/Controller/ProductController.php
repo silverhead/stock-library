@@ -66,9 +66,9 @@ class ProductController extends Controller
     }
 
     /**
-     * @Route("/{id}", name="product_show", methods="GET")
+     * @Route("/{id}", name="product_show", methods={"GET", "POST"})
      */
-    public function show(Product $product): Response
+    public function show(Request $request, Product $product): Response
     {
 
         $doctrine = $this->getDoctrine();
@@ -76,7 +76,23 @@ class ProductController extends Controller
         $categoryRepo = $doctrine->getRepository('AppBundle:Category');
         $storageRepo = $doctrine->getRepository('AppBundle:Storage');
 
-        $documentForm = $this->createForm(DocumentType::class, new Document());
+        $documentRepo = $doctrine->getRepository('AppBundle:Document');
+        $documents = $documentRepo->findBy(array(
+            'product' => $product
+        ));
+
+        $document = new Document();
+        $documentForm = $this->createForm(DocumentType::class, $document);
+
+        $documentForm->handleRequest($request);
+        if ($documentForm->isSubmitted() && $documentForm->isValid()) {
+            $document->setProduct($product);
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($document);
+            $em->flush();
+
+            return $this->redirectToRoute('product_show', ['id' => $product->getId()]);
+        }
 
 
         return $this->render('product/show.html.twig', [
@@ -85,7 +101,8 @@ class ProductController extends Controller
             'productQuantityAnotherUser' => $productUserRepo->findAllByProductAndAnotherUser($product, $this->getUser()),
             'categoryRepo' => $categoryRepo,
             'storageRepo' => $storageRepo,
-            'documentForm' => $documentForm->createView()
+            'documentForm' => $documentForm->createView(),
+            'documents' => $documents
         ]);
     }
 
