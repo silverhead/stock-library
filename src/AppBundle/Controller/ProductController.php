@@ -86,6 +86,11 @@ class ProductController extends Controller
 
         $documentForm->handleRequest($request);
         if ($documentForm->isSubmitted() && $documentForm->isValid()) {
+            $uploadableManager = $this->container->get('stof_doctrine_extensions.uploadable.manager');
+            if ($document->getFile() instanceof UploadedFile) {
+                $uploadableManager->markEntityToUpload($document, $document->getFile());
+            }
+
             $document->setProduct($product);
             $em = $this->getDoctrine()->getManager();
             $em->persist($document);

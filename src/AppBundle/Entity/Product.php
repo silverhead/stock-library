@@ -146,6 +146,11 @@ class Product
         return $this;
     }
 
+    public function getUploadPictureDir()
+    {
+        return self::PICTURE_PATH;
+    }
+
     /**
      * @return string
      */
@@ -239,11 +244,6 @@ class Product
         $this->documents = $documents;
 
         return $this;
-    }
-
-    public function getUploadPictureDir()
-    {
-        return self::PICTURE_PATH;
     }
 
     /**

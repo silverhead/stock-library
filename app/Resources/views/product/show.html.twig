@@ -85,7 +85,13 @@
                 {% if documents|length > 0 %}
                 <ul style="list-style: none">
                     {% for document in documents %}
-                        <li class="text-center float-left m-3"><b><a href="{{ asset(document.getFileWebPath()) }}" target="_blank" class="text-dark"><i class="fas fa-3x fa-image"></i><br />{{ document.title }}</a></b></li>
+                        <li class="text-center float-left m-3">
+                            <b><a href="{{ asset(document.getFileWebPath()) }}" target="_blank" class="text-dark">
+                                    {% include 'common/fileIcon.html.twig' with {'fileType': document.getCommonFileType() } %}
+                                    <br />
+                                    {{ document.title }}
+                                </a></b>
+                        </li>
                     {% endfor %}
                 </ul>
                 {% endif %}

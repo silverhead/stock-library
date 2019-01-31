@@ -1,0 +1,9 @@
+{% set iconClass = 'fa-file' %}
+{% if fileType == 'image' %}
+    {% set iconClass = 'fa-file-image' %}
+{% elseif fileType == 'text' %}
+    {% set iconClass = 'fa-file-alt' %}
+{% elseif fileType == 'pdf' %}
+    {% set iconClass = 'fa-file-pdf' %}
+{% endif %}
+<i class="fas fa-3x {{ iconClass }}"></i>

@@ -4,12 +4,14 @@ namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * Document
  *
  * @ORM\Table(name="document")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\DocumentRepository")
+ * @Gedmo\Uploadable(pathMethod="getUploadRootFileDir", filenameGenerator="SHA1")
  * @ORM\HasLifecycleCallbacks
  */
 class Document
@@ -41,8 +43,15 @@ class Document
     /**
      * @var string
      * @ORM\Column(type="string")
+     * @Gedmo\UploadableFileName()
      */
     private $fileName;
+
+    /**
+    * @ORM\Column(type="string", nullable=true)
+    * @Gedmo\UploadableFileMimeType()
+    */
+    private $fileType;
 
     /**
      * @var string
@@ -128,6 +137,27 @@ class Document
     }
 
     /**
+     * @return string
+     */
+    public function getFileType(): ?string
+    {
+        return $this->fileType;
+    }
+
+    /**
+     * @param string $fileType
+     * @return Document
+     */
+    public function setFileType(string $fileType): Document
+    {
+        $this->fileType = $fileType;
+
+        return $this;
+    }
+
+
+
+    /**
      * @return Product
      */
     public function getProduct(): ?Product
@@ -146,8 +176,6 @@ class Document
         return $this;
     }
 
-
-
     /**
      * @return File
      */
@@ -156,10 +184,6 @@ class Document
         return $this->file;
     }
 
-    /**
-     * @param File $file
-     * @return Document
-     */
     public function setFile(UploadedFile $file): Document
     {
         $this->file = $file;
@@ -167,10 +191,10 @@ class Document
         return $this;
     }
 
-    /**
-     * @ORM\PrePersist()
-     * @ORM\PreFlush()
-     */
+//    /**
+//     * @ORM\PrePersist()
+//     * @ORM\PreFlush()
+//     */
     public function preUpload()
     {
         if (null !== $this->getFile()) {
@@ -180,11 +204,11 @@ class Document
         }
     }
 
-    /**
-     * @ORM\PostPersist()
-     * @ORM\PostUpdate()
-     * @ORM\PostUpdate()
-     */
+//    /**
+//     * @ORM\PostPersist()
+//     * @ORM\PostUpdate()
+//     * @ORM\PostUpdate()
+//     */
     public function upload()
     {
         if (null === $this->getFile()) {
@@ -203,9 +227,9 @@ class Document
         $this->file = null;
     }
 
-    /**
-     * @ORM\PostRemove()
-     */
+//    /**
+//     * @ORM\PostRemove()
+//     */
     public function removeUpload()
     {
         if ($file = $this->getAbsoluteFilePath()) {
@@ -241,5 +265,24 @@ class Document
     protected function getUploadFileDir()
     {
         return self::FILE_PATH;
+    }
+
+    public function getCommonFileType()
+    {
+        $fileTypeCommon = 'unknown';
+
+        if (preg_match('/image/', $this->fileType)){
+            $fileTypeCommon = 'image';
+        }
+        else if(preg_match('/text/', $this->fileType))
+        {
+            $fileTypeCommon = 'text';
+        }
+        else if(preg_match('/pdf/',$this->fileType))
+        {
+            $fileTypeCommon = 'pdf';
+        }
+
+        return $fileTypeCommon;
     }
 }
