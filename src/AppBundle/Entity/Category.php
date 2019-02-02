@@ -12,8 +12,10 @@ use Gedmo\Mapping\Annotation as Gedmo;
  * @ORM\Entity(repositoryClass="AppBundle\Repository\CategoryRepository")
  * @ORM\HasLifecycleCallbacks
  */
-class Category
+class Category implements DocumentOwnerInterface
 {
+    use DocumentOwnerTrait;
+
     const PUBLIC_PATH = __DIR__.DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'web';
     const PICTURE_PATH = '/images/stock/categories';
 
@@ -90,6 +92,11 @@ class Category
      */
     private $children;
 
+    /**
+     * @var DocumentCategory
+     * @ORM\OneToMany(targetEntity="AppBundle\Entity\DocumentCategory", mappedBy="category")
+     */
+    private $documents;
 
     public function getId(): ?int
     {
@@ -363,5 +370,39 @@ class Category
         $this->children = $children;
 
         return $this;
+    }
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->children = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->documents = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+    /**
+     * Add child.
+     *
+     * @param \AppBundle\Entity\Category $child
+     *
+     * @return Category
+     */
+    public function addChild(\AppBundle\Entity\Category $child)
+    {
+        $this->children[] = $child;
+
+        return $this;
+    }
+
+    /**
+     * Remove child.
+     *
+     * @param \AppBundle\Entity\Category $child
+     *
+     * @return boolean TRUE if this collection contained the specified element, FALSE otherwise.
+     */
+    public function removeChild(\AppBundle\Entity\Category $child)
+    {
+        return $this->children->removeElement($child);
     }
 }

@@ -12,15 +12,15 @@ services:
         autoconfigure: true
         # this means you cannot fetch services directly from the container via $container->get()
         # if you need to do this, you can override this setting on individual services
-        public: false
+        public: true
 
     # makes classes in src/AppBundle available to be used as services
     # this creates a service per class whose id is the fully-qualified class name
-    AppBundle\:
-        resource: '../../src/AppBundle/*'
-        # you can exclude directories or files
-        # but if a service is unused, it's removed anyway
-        exclude: '../../src/AppBundle/{Entity,Repository,Tests}'
+#    AppBundle\:
+#        resource: '../../src/AppBundle/*'
+#        # you can exclude directories or files
+#        # but if a service is unused, it's removed anyway
+#        exclude: '../../src/AppBundle/{Entity,Repository,Tests,Service}'
 
     # controllers are imported separately to make sure they're public
     # and have a tag that allows actions to type-hint services
@@ -32,14 +32,10 @@ services:
     form_authenticator:
         class: AppBundle\Security\FormAuthenticator
         arguments: ['@doctrine.orm.entity_manager', '@router', '@security.password_encoder']
-#    app.entity.product:
-#        class: AppBundle\Entity\Product
-#    app.doctrine_picture_listener:
-#    class: AppBundle\EventListener\PictureUploadListener
-#    arguments: ['@app.entity.product']
-#    tags:
-#        - { name: doctrine.event_listener, event: prePersist }
-#        - { name: doctrine.event_listener, event: preUpdate }
+    # custom Service
+    app.service.document_form:
+        class: AppBundle\Service\DocumentForm
+        arguments: ['@form.factory', '@doctrine.orm.entity_manager', '@stof_doctrine_extensions.uploadable.manager', '@templating']
     # add more services, or override services that need manual wiring
     # AppBundle\Service\ExampleService:
     #     arguments:

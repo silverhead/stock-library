@@ -30,7 +30,7 @@ class ProductType extends AbstractType
             ->add('categories', EntityTreeType::class, array(
                 'class' => Category::class,
                 'query_builder' => function (EntityRepository $er) {
-                    return $er->createQueryBuilder('c');
+                    return $er->createQueryBuilder('c')->orderBy("label");
                 },
                 'required' => false,
                 'choice_value' => 'id',

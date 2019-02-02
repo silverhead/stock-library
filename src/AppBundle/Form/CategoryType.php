@@ -21,7 +21,7 @@ class CategoryType extends AbstractType
             ->add('parent', EntityTreeType::class, array(
                 'class' => 'AppBundle\Entity\Category',
                 'query_builder' => function (EntityRepository $er) {
-                    return $er->createQueryBuilder('c')
+                    return $er->createQueryBuilder('c')->orderBy("c.label")
                         ;
                 },
                 'required' => false,

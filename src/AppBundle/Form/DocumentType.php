@@ -2,9 +2,7 @@
 
 namespace AppBundle\Form;
 
-use AppBundle\Entity\Category;
-use AppBundle\Entity\Document;
-use Doctrine\ORM\EntityRepository;
+use AppBundle\Entity\AbstractDocument;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -26,7 +24,7 @@ class DocumentType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'data_class' => Document::class,
+            'data_class' => AbstractDocument::class,
         ]);
     }
 }

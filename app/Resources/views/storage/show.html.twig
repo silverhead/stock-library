@@ -17,12 +17,12 @@
             <div class="col-md-10">
                 <div class="row">
                     <div class="col">
-                        <h2>{{ storage.label }}</h2>
+                        <a href="{{ path('storage_edit', { 'id': storage.id }) }}" class="btn btn-warning">Modifier</a>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col">
-                        <a href="{{ path('storage_edit', { 'id': storage.id }) }}" class="btn btn-warning">Modifier</a>
+                        <h2>{{ storage.label }}</h2>
                     </div>
                 </div>
             </div>

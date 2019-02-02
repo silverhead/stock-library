@@ -2,13 +2,14 @@
 
 namespace AppBundle\Controller;
 
-use AppBundle\Entity\Document;
+use AppBundle\Entity\DocumentProduct;
 use AppBundle\Entity\Product;
 use AppBundle\Entity\ProductByUser;
 use AppBundle\Form\DocumentType;
 use AppBundle\Form\Model\ProductModel;
 use AppBundle\Form\ProductModelType;
 use AppBundle\Form\ProductType;
+use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
@@ -56,7 +57,7 @@ class ProductController extends Controller
         if ($form->isSubmitted() && $form->isValid()) {
             $this->saveProduct($form, $product);
 
-            return $this->redirectToRoute('product_index');
+            return $this->redirectToRoute('product_show', array('id' => $product->getId()));
         }
 
         return $this->render('product/new.html.twig', [
@@ -76,29 +77,32 @@ class ProductController extends Controller
         $categoryRepo = $doctrine->getRepository('AppBundle:Category');
         $storageRepo = $doctrine->getRepository('AppBundle:Storage');
 
-        $documentRepo = $doctrine->getRepository('AppBundle:Document');
-        $documents = $documentRepo->findBy(array(
+        $categories = new ArrayCollection();
+        foreach($product->getCategories() as $category)
+        {
+            $parents = $categoryRepo->getPath($category);
+
+            foreach ($parents as $parent){
+                $categories->add($parent);
+            }
+        }
+
+        $documentCategoryRepo = $doctrine->getRepository('AppBundle:DocumentCategory');
+        $documentCategories = $documentCategoryRepo->findAllDocumentsByCategories($categories);
+
+        $documentProductRepo = $doctrine->getRepository('AppBundle:DocumentProduct');
+        $documentProducts = $documentProductRepo->findBy(array(
             'product' => $product
         ));
 
-        $document = new Document();
-        $documentForm = $this->createForm(DocumentType::class, $document);
+        $documentForm = $this->get('app.service.document_form');
+        $documentForm->setForm(New DocumentProduct());
+        if ($documentForm->handlerForm($request, $product)){
 
-        $documentForm->handleRequest($request);
-        if ($documentForm->isSubmitted() && $documentForm->isValid()) {
-            $uploadableManager = $this->container->get('stof_doctrine_extensions.uploadable.manager');
-            if ($document->getFile() instanceof UploadedFile) {
-                $uploadableManager->markEntityToUpload($document, $document->getFile());
-            }
-
-            $document->setProduct($product);
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($document);
-            $em->flush();
+            $this->addFlash('success',"Produit enregistré avec succès !");
 
             return $this->redirectToRoute('product_show', ['id' => $product->getId()]);
         }
-
 
         return $this->render('product/show.html.twig', [
             'product' => $product,
@@ -106,8 +110,9 @@ class ProductController extends Controller
             'productQuantityAnotherUser' => $productUserRepo->findAllByProductAndAnotherUser($product, $this->getUser()),
             'categoryRepo' => $categoryRepo,
             'storageRepo' => $storageRepo,
-            'documentForm' => $documentForm->createView(),
-            'documents' => $documents
+            'documents' => $documentProducts,
+            'documentCategories' => $documentCategories,
+            'documentForm' => $documentForm
         ]);
     }
 
@@ -128,7 +133,9 @@ class ProductController extends Controller
 
             $this->getDoctrine()->getManager()->flush();
 
-            return $this->redirectToRoute('product_index', ['id' => $product->getId()]);
+            $this->addFlash('success',"Produit enregistré avec succès !");
+
+            return $this->redirectToRoute('product_edit', ['id' => $product->getId()]);
         }
 
         return $this->render('product/edit.html.twig', [

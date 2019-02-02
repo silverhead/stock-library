@@ -12,10 +12,16 @@
             <img src="{{ asset(category.getPictureWebPath()) }}" class="img-fluid border border-dark">
         {% endif %}
     </div>
-    <div class="col-md-8">
+    <div class="col-md-4">
         <p><a href="{{ path('category_edit', {'id': category.id}) }}" class="btn btn-warning">Modifier</a></p>
         <h2>Description</h2>
         <div>{{ category.description }}</div>
+    </div>
+    <div class="col-md-4">
+        <h2>Documentations liés</h2>
+        <p>{{ documentForm.addButton|raw }}</p>
+        {{ documentForm.modalDocumentForm|raw }}
+        {% include('document/ownerDocumentsList.html.twig')  %}
     </div>
 </div>
 {% endblock %}

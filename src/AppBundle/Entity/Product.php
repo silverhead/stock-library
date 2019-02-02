@@ -12,9 +12,10 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\Entity(repositoryClass="AppBundle\Repository\ProductRepository")
  * @Gedmo\Uploadable(pathMethod="getUploadRootPictureDir", filenameGenerator="SHA1")
  */
-class Product
+class Product implements DocumentOwnerInterface
 {
     use UploadPictureEntityTrait;
+    use DocumentOwnerTrait;
 
     const PICTURE_PATH = '/images/stock/products';
 
@@ -51,6 +52,12 @@ class Product
     private $pictureFile;
 
     /**
+     * @var DocumentProduct
+     * @ORM\OneToMany(targetEntity="DocumentProduct", mappedBy="product")
+     */
+    protected $documents;
+
+    /**
      * @var string
      * @ORM\Column(type="string", length=255, nullable=true)
      */
@@ -60,11 +67,6 @@ class Product
      * @ORM\ManyToMany(targetEntity="AppBundle\Entity\Category")
      */
     private $categories;
-
-    /**
-     * @ORM\OneToMany(targetEntity="AppBundle\Entity\Document", mappedBy="product")
-     */
-    private $documents;
 
     /**
      * @var string
@@ -228,25 +230,6 @@ class Product
     }
 
     /**
-     * @return mixed
-     */
-    public function getDocuments()
-    {
-        return $this->documents;
-    }
-
-    /**
-     * @param mixed $documents
-     * @return Product
-     */
-    public function setDocuments($documents)
-    {
-        $this->documents = $documents;
-
-        return $this;
-    }
-
-    /**
      * Add category.
      *
      * @param \AppBundle\Entity\Category $category
@@ -271,33 +254,6 @@ class Product
     {
         return $this->categories->removeElement($category);
     }
-
-    /**
-     * Add document.
-     *
-     * @param \AppBundle\Entity\Document $document
-     *
-     * @return Product
-     */
-    public function addDocument(\AppBundle\Entity\Document $document)
-    {
-        $this->documents[] = $document;
-
-        return $this;
-    }
-
-    /**
-     * Remove document.
-     *
-     * @param \AppBundle\Entity\Document $document
-     *
-     * @return boolean TRUE if this collection contained the specified element, FALSE otherwise.
-     */
-    public function removeDocument(\AppBundle\Entity\Document $document)
-    {
-        return $this->documents->removeElement($document);
-    }
-
 
     /**
      * Add productUser.

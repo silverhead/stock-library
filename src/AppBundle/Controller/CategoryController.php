@@ -3,6 +3,7 @@
 namespace AppBundle\Controller;
 
 use AppBundle\Entity\Category;
+use AppBundle\Entity\DocumentCategory;
 use AppBundle\Form\CategoryType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
@@ -21,7 +22,7 @@ class CategoryController extends Controller
     {
         $categoryRepository = $this->getDoctrine()->getRepository('AppBundle:Category');
 
-        return $this->render('category/index.html.twig', ['categories' => $categoryRepository->findAll(array('lft' => 'ASC'))]);
+        return $this->render('category/index.html.twig', ['categories' => $categoryRepository->findBy( array(),array('lft' => 'ASC', 'label' => 'ASC'))]);
     }
 
     /**
@@ -37,10 +38,11 @@ class CategoryController extends Controller
             $em = $this->getDoctrine()->getManager();
             $categoryRepository = $this->getDoctrine()->getRepository('AppBundle:Category');
             $categoryRepository->persistAsFirstChild($category);
-
             $em->flush();
 
-            return $this->redirectToRoute('category_index');
+            $this->addFlash('success',"Rangement enregistré avec succès !");
+
+            return $this->redirectToRoute('category_show', array('id' => $category->getId()));
         }
 
         return $this->render('category/new.html.twig', [
@@ -50,11 +52,22 @@ class CategoryController extends Controller
     }
 
     /**
-     * @Route("/{id}", name="category_show", methods="GET")
+     * @Route("/{id}", name="category_show", methods={"GET", "POST"})
      */
-    public function show(Category $category): Response
+    public function show(Request $request, Category $category): Response
     {
-        return $this->render('category/show.html.twig', ['category' => $category]);
+        $documentRepo = $this->getDoctrine()->getRepository('AppBundle:DocumentCategory');
+        $documents = $documentRepo->findBy(array(
+            'category' => $category
+        ));
+
+        $documentForm = $this->get('app.service.document_form');
+        $documentForm->setForm(New DocumentCategory());
+        if ($documentForm->handlerForm($request, $category)){
+            return $this->redirectToRoute('category_show', ['id' => $category->getId()]);
+        }
+
+        return $this->render('category/show.html.twig', ['category' => $category, 'documentForm'=> $documentForm, 'documents' => $documents]);
     }
 
     /**
@@ -69,7 +82,9 @@ class CategoryController extends Controller
 
             $this->getDoctrine()->getManager()->flush();
 
-            return $this->redirectToRoute('category_index', ['id' => $category->getId()]);
+            $this->addFlash('success',"Catégorie enregistrée avec succès !");
+
+            return $this->redirectToRoute('category_edit', ['id' => $category->getId()]);
         }
 
         return $this->render('category/edit.html.twig', [

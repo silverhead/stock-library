@@ -7,14 +7,12 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
- * Document
- *
- * @ORM\Table(name="document")
- * @ORM\Entity(repositoryClass="AppBundle\Repository\DocumentRepository")
+ * Class AbstractDocument
+ * @package AppBundle\Entity
+ * @ORM\MappedSuperclass()
  * @Gedmo\Uploadable(pathMethod="getUploadRootFileDir", filenameGenerator="SHA1")
- * @ORM\HasLifecycleCallbacks
  */
-class Document
+Abstract class AbstractDocument
 {
     const PUBLIC_PATH = __DIR__.DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'..'.DIRECTORY_SEPARATOR.'web';
     const FILE_PATH = '/documents';
@@ -48,9 +46,9 @@ class Document
     private $fileName;
 
     /**
-    * @ORM\Column(type="string", nullable=true)
-    * @Gedmo\UploadableFileMimeType()
-    */
+     * @ORM\Column(type="string", nullable=true)
+     * @Gedmo\UploadableFileMimeType()
+     */
     private $fileType;
 
     /**
@@ -62,12 +60,6 @@ class Document
      * @var UploadedFile
      */
     private $file;
-
-    /**
-     * @var Product
-     * @ORM\ManyToOne(targetEntity="AppBundle\Entity\Product", inversedBy="documents")
-     */
-    private $product;
 
     /**
      * Get id.
@@ -89,9 +81,9 @@ class Document
 
     /**
      * @param string $title
-     * @return Document
+     * @return DocumentProduct
      */
-    public function setTitle(string $title): Document
+    public function setTitle(string $title): AbstractDocument
     {
         $this->title = $title;
 
@@ -108,9 +100,9 @@ class Document
 
     /**
      * @param string $description
-     * @return Document
+     * @return DocumentProduct
      */
-    public function setDescription(string $description): Document
+    public function setDescription(string $description): AbstractDocument
     {
         $this->description = $description;
 
@@ -127,9 +119,9 @@ class Document
 
     /**
      * @param string $fileName
-     * @return Document
+     * @return DocumentProduct
      */
-    public function setFileName(string $fileName): Document
+    public function setFileName(string $fileName): AbstractDocument
     {
         $this->fileName = $fileName;
 
@@ -146,32 +138,11 @@ class Document
 
     /**
      * @param string $fileType
-     * @return Document
+     * @return DocumentProduct
      */
-    public function setFileType(string $fileType): Document
+    public function setFileType(string $fileType): AbstractDocument
     {
         $this->fileType = $fileType;
-
-        return $this;
-    }
-
-
-
-    /**
-     * @return Product
-     */
-    public function getProduct(): ?Product
-    {
-        return $this->product;
-    }
-
-    /**
-     * @param Product $product
-     * @return Document
-     */
-    public function setProduct(Product $product): Document
-    {
-        $this->product = $product;
 
         return $this;
     }
@@ -184,7 +155,7 @@ class Document
         return $this->file;
     }
 
-    public function setFile(UploadedFile $file): Document
+    public function setFile(UploadedFile $file): AbstractDocument
     {
         $this->file = $file;
 
@@ -204,11 +175,6 @@ class Document
         }
     }
 
-//    /**
-//     * @ORM\PostPersist()
-//     * @ORM\PostUpdate()
-//     * @ORM\PostUpdate()
-//     */
     public function upload()
     {
         if (null === $this->getFile()) {
@@ -227,9 +193,6 @@ class Document
         $this->file = null;
     }
 
-//    /**
-//     * @ORM\PostRemove()
-//     */
     public function removeUpload()
     {
         if ($file = $this->getAbsoluteFilePath()) {
@@ -285,4 +248,10 @@ class Document
 
         return $fileTypeCommon;
     }
+
+    /**
+     * @param DocumentOwnerInterface $owner
+     * @return AbstractDocument
+     */
+    public abstract function setOwner(DocumentOwnerInterface $owner): AbstractDocument;
 }

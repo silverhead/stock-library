@@ -30,6 +30,7 @@ framework:
     assets: ~
     php_errors:
         log: true
+    templating: { engines: ['twig'] }
 
 # Twig Configuration
 twig:
@@ -67,7 +68,6 @@ doctrine:
                 dir: "%kernel.root_dir%/../vendor/gedmo/doctrine-extensions/lib/Gedmo/Tree/Entity"
                 alias: GedmoTree # (optional) it will default to the name set for the mapping
                 is_bundle: false
-
 stof_doctrine_extensions:
     default_locale: fr_FR
     uploadable:

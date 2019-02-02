@@ -24,7 +24,10 @@ class StorageController extends Controller
     {
         $em = $this->getDoctrine()->getManager();
 
-        $storages = $em->getRepository('AppBundle:Storage')->findAllByUser($this->getUser());
+        $storages = $em->getRepository('AppBundle:Storage')->findAllByUser($this->getUser(), array(
+            's.lft' => 'ASC',
+            's.label' => 'ASC'
+        ));
 
         return $this->render('storage/index.html.twig', array(
             'storages' => $storages,
@@ -52,6 +55,8 @@ class StorageController extends Controller
             $em = $this->getDoctrine()->getManager();
             $em->persist($storage);
             $em->flush();
+
+            $this->addFlash('success',"Rangement enregistré avec succès !");
 
             return $this->redirectToRoute('storage_show', array('id' => $storage->getId()));
         }
@@ -105,6 +110,8 @@ class StorageController extends Controller
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
             $this->getDoctrine()->getManager()->flush();
+
+            $this->addFlash('success',"Rangement enregistré avec succès !");
 
             return $this->redirectToRoute('storage_edit', array('id' => $storage->getId()));
         }

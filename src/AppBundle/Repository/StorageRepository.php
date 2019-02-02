@@ -16,12 +16,17 @@ use http\Exception\InvalidArgumentException;
 class StorageRepository extends NestedTreeRepository
 {
 
-    public function findAllByUser(User $user)
+    public function findAllByUser(User $user, array $orders)
     {
-        return $this->createQueryBuilder("s")
+        $qb = $this->createQueryBuilder("s")
             ->where("s.user = :user")
-            ->setParameter("user", $user)
-            ->getQuery()
+            ->setParameter("user", $user);
+
+        foreach ($orders as $sort => $order ){
+            $qb->addOrderBy($sort, $order);
+        }
+
+        return $qb->getQuery()
             ->getResult()
             ;
     }

@@ -2,6 +2,7 @@
 <div class="modal fade" id="documentModal" tabindex="-1" role="dialog" aria-labelledby="documentModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
+            {{ form_start(form) }}
             <div class="modal-header">
                 <h5 class="modal-title" id="documentModalLabel">Ajouter un document</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -9,12 +10,13 @@
                 </button>
             </div>
             <div class="modal-body">
-                {% include 'document/_form.html.twig' %}
+                {% include 'document/_formContent.html.twig' %}
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">fermer</button>
-                <button type="button" class="btn btn-primary" id="documentSaveBtn" >Enregistrer</button>
+                <button type="submit" class="btn btn-primary">Enregistrer</button>
             </div>
+            {{ form_end(form) }}
         </div>
     </div>
 </div>

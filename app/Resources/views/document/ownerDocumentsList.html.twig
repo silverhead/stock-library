@@ -1,0 +1,13 @@
+{% if documents|length > 0 %}
+<ul style="list-style: none" class="d-flex flex-row">
+    {% for document in documents %}
+        <li class="text-center m-3">
+            <b><a href="{{ asset(document.getFileWebPath()) }}" target="_blank" class="text-dark" data-toggle="tooltip" title="{{ document.description }}">
+                    {% include 'common/fileIcon.html.twig' with {'fileType': document.getCommonFileType() } %}
+                    <br />
+                    {{ document.title }}
+                </a></b>
+        </li>
+    {% endfor %}
+</ul>
+{% endif %}
