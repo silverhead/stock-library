@@ -3,10 +3,16 @@
 namespace AppBundle\Repository;
 
 
+use AppBundle\Entity\Category;
 use Gedmo\Tree\Entity\Repository\NestedTreeRepository;
 
 class CategoryRepository extends NestedTreeRepository
 {
+    public function reorderHierarchy(Category $category)
+    {
+        $parent = $this->findOneById($category->getParent());
+        $this->reorder($parent, 'label', 'ASC');
+    }
 
     // /**
     //  * @return Category[] Returns an array of Category objects

@@ -22,7 +22,7 @@ class CategoryController extends Controller
     {
         $categoryRepository = $this->getDoctrine()->getRepository('AppBundle:Category');
 
-        return $this->render('category/index.html.twig', ['categories' => $categoryRepository->findBy( array(),array('lft' => 'ASC', 'label' => 'ASC'))]);
+        return $this->render('category/index.html.twig', ['categories' => $categoryRepository->findBy(array(), array('lft' => 'ASC'))]);
     }
 
     /**
@@ -36,9 +36,11 @@ class CategoryController extends Controller
 
         if ($form->isSubmitted() && $form->isValid()) {
             $em = $this->getDoctrine()->getManager();
-            $categoryRepository = $this->getDoctrine()->getRepository('AppBundle:Category');
-            $categoryRepository->persistAsFirstChild($category);
+            $em->persist($category);
             $em->flush();
+
+            $categoryRepository = $this->getDoctrine()->getRepository('AppBundle:Category');
+            $categoryRepository->reorderHierarchy($category);
 
             $this->addFlash('success',"Rangement enregistré avec succès !");
 
@@ -81,6 +83,9 @@ class CategoryController extends Controller
         if ($form->isSubmitted() && $form->isValid()) {
 
             $this->getDoctrine()->getManager()->flush();
+
+            $categoryRepository = $this->getDoctrine()->getRepository('AppBundle:Category');
+            $categoryRepository->reorderHierarchy($category);
 
             $this->addFlash('success',"Catégorie enregistrée avec succès !");
 

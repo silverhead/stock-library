@@ -2,6 +2,7 @@
 
 namespace AppBundle\Repository;
 
+use AppBundle\Entity\Storage;
 use AppBundle\Entity\User;
 use Gedmo\Tool\Wrapper\EntityWrapper;
 use Gedmo\Tree\Entity\Repository\NestedTreeRepository;
@@ -83,5 +84,11 @@ class StorageRepository extends NestedTreeRepository
         $qb->setParameter('userid', $user->getId());
 
         return $qb;
+    }
+
+    public function reorderHierarchy(Storage $storage)
+    {
+        $parent = $this->findOneById($storage->getParent());
+        $this->reorder($parent, 'label', 'ASC');
     }
 }

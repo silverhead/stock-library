@@ -25,8 +25,7 @@ class StorageController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         $storages = $em->getRepository('AppBundle:Storage')->findAllByUser($this->getUser(), array(
-            's.lft' => 'ASC',
-            's.label' => 'ASC'
+            's.lft' => 'ASC'
         ));
 
         return $this->render('storage/index.html.twig', array(
@@ -52,9 +51,13 @@ class StorageController extends Controller
 
             $storage->setUser($this->getUser());
 
-            $em = $this->getDoctrine()->getManager();
+            $doctrine  = $this->getDoctrine();
+            $em = $doctrine->getManager();
             $em->persist($storage);
             $em->flush();
+
+            $storageRepo = $doctrine->getRepository('AppBundle:Storage');
+            $storageRepo->reorderHierarchy($storage);
 
             $this->addFlash('success',"Rangement enregistré avec succès !");
 
@@ -109,7 +112,11 @@ class StorageController extends Controller
         $editForm->handleRequest($request);
 
         if ($editForm->isSubmitted() && $editForm->isValid()) {
-            $this->getDoctrine()->getManager()->flush();
+            $doctrine = $this->getDoctrine();
+            $doctrine->getManager()->flush();
+
+            $storageRepo = $doctrine->getRepository('AppBundle:Storage');
+            $storageRepo->reorderHierarchy($storage);
 
             $this->addFlash('success',"Rangement enregistré avec succès !");
 
