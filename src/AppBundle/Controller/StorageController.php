@@ -5,7 +5,9 @@ namespace AppBundle\Controller;
 use AppBundle\Entity\Storage;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;use Symfony\Component\HttpFoundation\Request;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\Form\FormInterface;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Storage controller.
@@ -45,23 +47,8 @@ class StorageController extends Controller
         $form = $this->createForm('AppBundle\Form\StorageType', $storage, array(
             'user' => $this->getUser()
         ));
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-
-            $storage->setUser($this->getUser());
-
-            $doctrine  = $this->getDoctrine();
-            $em = $doctrine->getManager();
-            $em->persist($storage);
-            $em->flush();
-
-            $storageRepo = $doctrine->getRepository('AppBundle:Storage');
-            $storageRepo->reorderHierarchy($storage);
-
-            $this->addFlash('success',"Rangement enregistré avec succès !");
-
-            return $this->redirectToRoute('storage_show', array('id' => $storage->getId()));
+        if ($this->handleForm($form, $storage, $request)){
+            return $this->redirectToRoute('storage_index');
         }
 
         return $this->render('storage/new.html.twig', array(
@@ -109,18 +96,8 @@ class StorageController extends Controller
             'user' => $this->getUser()
         ));
 
-        $editForm->handleRequest($request);
-
-        if ($editForm->isSubmitted() && $editForm->isValid()) {
-            $doctrine = $this->getDoctrine();
-            $doctrine->getManager()->flush();
-
-            $storageRepo = $doctrine->getRepository('AppBundle:Storage');
-            $storageRepo->reorderHierarchy($storage);
-
-            $this->addFlash('success',"Rangement enregistré avec succès !");
-
-            return $this->redirectToRoute('storage_edit', array('id' => $storage->getId()));
+        if ($this->handleForm($editForm, $storage, $request)){
+            return $this->redirectToRoute('storage_index');
         }
 
         return $this->render('storage/edit.html.twig', array(
@@ -128,6 +105,39 @@ class StorageController extends Controller
             'edit_form' => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),
         ));
+    }
+
+    private function handleForm(FormInterface $form, Storage $storage, Request $request)
+    {
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $em = $this->get('doctrine.orm.default_entity_manager');
+            $em->beginTransaction();
+
+            try{
+                $storage->setUser($this->getUser());
+                $em->persist($storage);
+                $em->flush();
+
+                $repository = $this->getDoctrine()->getRepository('AppBundle:Storage');
+                $repository->reorderHierarchy($storage);
+
+                $em->commit();
+
+                $this->addFlash('success',"Rangement enregistré avec succès !");
+
+                return true;
+            }
+            catch (\Exception $ex){
+
+                $em->rollback();
+
+                $this->addFlash('error',$ex->getMessage());
+            }
+        }
+
+        return false;
     }
 
     /**

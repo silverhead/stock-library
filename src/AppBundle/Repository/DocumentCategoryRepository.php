@@ -13,16 +13,21 @@ use Doctrine\Common\Collections\Criteria;
  */
 class DocumentCategoryRepository extends \Doctrine\ORM\EntityRepository
 {
+    /**
+     * @param ArrayCollection $categories
+     * @return mixed
+     */
     public function findAllDocumentsByCategories(ArrayCollection $categories)
     {
         $ids = $categories->map(function($cat){ return $cat->getId();})->toArray();
-//
-//        dump($ids);
+
+        if (count($ids) == 0){
+            return new ArrayCollection();
+        }
 
         $qb =  $this->createQueryBuilder("dc");
         return $qb->where($qb->expr()->in("dc.category", $ids))
-            ->getQuery()
-            ->getResult();
+            ->getQuery()->getResult()
         ;
     }
 }

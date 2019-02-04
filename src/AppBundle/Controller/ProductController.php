@@ -135,7 +135,7 @@ class ProductController extends Controller
 
             $this->addFlash('success',"Produit enregistré avec succès !");
 
-            return $this->redirectToRoute('product_edit', ['id' => $product->getId()]);
+            return $this->redirectToRoute('product_show', ['id' => $product->getId()]);
         }
 
         return $this->render('product/edit.html.twig', [

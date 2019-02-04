@@ -5,7 +5,9 @@ namespace AppBundle\Controller;
 use AppBundle\Entity\Category;
 use AppBundle\Entity\DocumentCategory;
 use AppBundle\Form\CategoryType;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -32,19 +34,9 @@ class CategoryController extends Controller
     {
         $category = new Category();
         $form = $this->createForm(CategoryType::class, $category);
-        $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($category);
-            $em->flush();
-
-            $categoryRepository = $this->getDoctrine()->getRepository('AppBundle:Category');
-            $categoryRepository->reorderHierarchy($category);
-
-            $this->addFlash('success',"Rangement enregistré avec succès !");
-
-            return $this->redirectToRoute('category_show', array('id' => $category->getId()));
+        if ($this->handleForm($form, $category, $request)){
+            return $this->redirectToRoute('category_index');
         }
 
         return $this->render('category/new.html.twig', [
@@ -78,24 +70,47 @@ class CategoryController extends Controller
     public function edit(Request $request, Category $category): Response
     {
         $form = $this->createForm(CategoryType::class, $category);
-        $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-
-            $this->getDoctrine()->getManager()->flush();
-
-            $categoryRepository = $this->getDoctrine()->getRepository('AppBundle:Category');
-            $categoryRepository->reorderHierarchy($category);
-
-            $this->addFlash('success',"Catégorie enregistrée avec succès !");
-
-            return $this->redirectToRoute('category_edit', ['id' => $category->getId()]);
+        if ($this->handleForm($form, $category, $request)){
+            return $this->redirectToRoute('category_index');
         }
 
         return $this->render('category/edit.html.twig', [
             'category' => $category,
             'form' => $form->createView(),
         ]);
+    }
+
+    private function handleForm(FormInterface $form, Category $category, Request $request)
+    {
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $em = $this->get('doctrine.orm.default_entity_manager');
+            $em->beginTransaction();
+
+            try{
+                $em->persist($category);
+                $em->flush();
+
+                $categoryRepository = $this->getDoctrine()->getRepository('AppBundle:Category');
+                $categoryRepository->reorderHierarchy($category);
+
+                $em->commit();
+
+                $this->addFlash('success',"Catégorie enregistrée avec succès !");
+
+                return true;
+            }
+            catch (\Exception $ex){
+
+                $em->rollback();
+
+                $this->addFlash('error',$ex->getMessage());
+            }
+        }
+
+        return false;
     }
 
     /**

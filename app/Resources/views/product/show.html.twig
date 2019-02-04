@@ -85,7 +85,7 @@
                 <p>Aucun prêt pour ce produit</p>
                 <h2>Doc. catégories</h2>
                 {% include 'document/ownerDocumentsList.html.twig' with {'documents': documentCategories } %}
-                <h2 class="text-center">Doc. du produit</h2>
+                <h2>Doc. du produit</h2>
                 <p class="">{{ documentForm.addButton|raw }}</p>
                 {{ documentForm.modalDocumentForm|raw }}
                 {% include('document/ownerDocumentsList.html.twig') %}

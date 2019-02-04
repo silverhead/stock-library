@@ -88,7 +88,9 @@ class StorageRepository extends NestedTreeRepository
 
     public function reorderHierarchy(Storage $storage)
     {
-        $parent = $this->findOneById($storage->getParent());
-        $this->reorder($parent, 'label', 'ASC');
+        if( $storage->getParent() !== null){
+            $parent = $this->findOneById($storage->getParent());
+            $this->reorder($parent, 'label', 'ASC');
+        }
     }
 }
