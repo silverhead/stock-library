@@ -176,7 +176,7 @@ class ProductModel
      * @param string $description
      * @return ProductModel
      */
-    public function setDescription(string $description): ProductModel
+    public function setDescription(string $description = null): ProductModel
     {
         $this->description = $description;
 

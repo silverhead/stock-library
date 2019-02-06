@@ -24,9 +24,9 @@ use AppBundle\Form\SearchProductType;
 class ProductController extends Controller
 {
     /**
-     * @Route("/products", name="product_index", methods="GET")
+     * @Route("/products/{page}", name="product_index", methods="GET", defaults={"page"=1})
      */
-    public function index(): Response
+    public function index(Request $request, $page): Response
     {
         $doctrine = $this->get('doctrine');
 
@@ -34,8 +34,29 @@ class ProductController extends Controller
         $categoryRepo = $doctrine->getRepository('AppBundle:Category');
         $storageRepo = $doctrine->getRepository('AppBundle:Storage');
 
+        if($page < 1){
+            $page = 1;
+        }
+
+        $nbItem = 10;
+        $start = ($page-1) * $nbItem;
+
+        $products = $productRepository->findPaginatorProducts(
+            array('p.label' => 'ASC'),
+            $start,
+            $nbItem
+        );
+
+        $pagination = array(
+            'page' => $page,
+            'nbPages' => ceil(count($products) / $nbItem),
+            'nomRoute' => 'product_index',
+            'paramsRoute' => array()
+        );
+
         return $this->render('product/index.html.twig', [
-            'products' => $productRepository->findAll(),
+            'products' => $products,
+            'pagination' => $pagination,
             'categoryRepo' => $categoryRepo,
             'storageRepo' => $storageRepo
         ] );

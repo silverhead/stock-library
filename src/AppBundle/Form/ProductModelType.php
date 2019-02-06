@@ -23,7 +23,9 @@ class ProductModelType extends AbstractType
         $builder
             ->add('label')
             ->add('reference')
-            ->add('description', TextareaType::class)
+            ->add('description', TextareaType::class, array(
+                'required' => false
+            ))
             ->add('pictureFile', FileType::class, [
                 'required' => false,
                 'attr' => array(

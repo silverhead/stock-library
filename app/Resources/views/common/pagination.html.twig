@@ -1,0 +1,38 @@
+{% if pagination.nbPages > 0 %}
+    <nav>
+    <ul class="pagination">
+        {% if pagination.page > 1 %}
+            <li class="page-item">
+                <a class="page-link" href="{{ path(pagination.nomRoute, pagination.paramsRoute|merge({'page': 1})) }}">
+                    <<
+                </a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" href="{{ path(pagination.nomRoute, pagination.paramsRoute|merge({'page': pagination.page-1})) }}">
+                    <
+                </a>
+            </li>
+        {% endif %}
+        {% for p in range(max(pagination.page-4, 1), min(pagination.page+4, pagination.nbPages)) %}
+            <li  class="page-item {% if p == pagination.page %}active{% endif %}">
+                <a class="page-link" href="{{ path(pagination.nomRoute, pagination.paramsRoute|merge({'page': p})) }}">
+                    {{ p }}
+                </a>
+            </li>
+        {% endfor %}
+
+        {% if pagination.page < pagination.nbPages %}
+            <li class="page-item">
+                <a class="page-link" href="{{ path(pagination.nomRoute, pagination.paramsRoute|merge({'page': pagination.page+1})) }}">
+                    >
+                </a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" href="{{ path(pagination.nomRoute, pagination.paramsRoute|merge({'page': pagination.nbPages})) }}">
+                    >>
+                </a>
+            </li>
+        {% endif %}
+    </ul>
+    </nav>
+{% endif %}

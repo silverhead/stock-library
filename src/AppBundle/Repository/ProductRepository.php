@@ -5,6 +5,7 @@ namespace AppBundle\Repository;
 use AppBundle\Entity\Storage;
 use AppBundle\Entity\User;
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\Tools\Pagination\Paginator;
 
 class ProductRepository extends EntityRepository
 {
@@ -57,6 +58,20 @@ class ProductRepository extends EntityRepository
             ->andWhere("pu.storage in (:ids)")
             ->setParameter("ids", implode(",", $ids->toArray()))
             ->getQuery()->getResult();
+    }
+
+    public function findPaginatorProducts($orders, int $start, int $offset): Paginator
+    {
+        $qb = $this->createQueryBuilder('p');
+
+        foreach ($orders as $sort => $order){
+            $qb->addOrderBy($sort, $order);
+        }
+
+        $qb->setFirstResult($start)
+            ->setMaxResults($offset);
+
+        return new Paginator($qb->getQuery());
     }
 
     // /**

@@ -6,6 +6,7 @@
         <div class="row">
             <div class="col-md-12">
                 <h1><a href="{{ path('product_index') }}" class="btn btn-light">Retour</a> Produit : {{ product.label }}</h1>
+                {% include 'flashMessage/flashMessageBlock.html.twig' with {'colClass':'col-lg-12'} %}
             </div>
         </div>
         <div class="row">
@@ -66,7 +67,7 @@
                 </div>
                 <div class="row">
                     <div class="col-md-12">
-                        <label>Description :</label><br />
+                        <h2>Description :</h2>
                         {{ product.description }}
                     </div>
                 </div>
