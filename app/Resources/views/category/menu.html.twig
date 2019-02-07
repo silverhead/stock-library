@@ -1,0 +1,8 @@
+    <a href="#" class="dropdown-toggle nav-link" id="categoriesMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        Categories
+    </a>
+    <div class="dropdown-menu submenu" aria-labelledby="categoriesMenu">
+        {% for categorie in categories %}
+        <a href="{{ path('category_sub_list', {id: categorie.id}) }}" class="dropdown-item">{{ categorie.label }}</a>
+        {% endfor %}
+    </div>

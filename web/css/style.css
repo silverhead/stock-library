@@ -119,3 +119,23 @@ body {
 
 .border-top { border-top: 1px solid #e5e5e5; }
 .border-bottom { border-bottom: 1px solid #e5e5e5; }
+
+.nav a:hover{
+    color: #007bff;
+}
+
+.submenu{
+    position: relative !important;
+    transform: none !important;
+    border: none;
+    background: transparent !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+.submenu a{
+    font-size: .875rem !important;
+}
+
+tr.subTree{
+    display: none;
+}

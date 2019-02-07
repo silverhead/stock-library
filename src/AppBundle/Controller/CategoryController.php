@@ -18,13 +18,21 @@ use Symfony\Component\Routing\Annotation\Route;
 class CategoryController extends Controller
 {
     /**
+     * @Route("/sub/{id}", name="category_sub_list", methods="GET")
      * @Route("/", name="category_index", methods="GET")
      */
-    public function index(): Response
+    public function index(Category $parent = null): Response
     {
         $categoryRepository = $this->getDoctrine()->getRepository('AppBundle:Category');
 
-        return $this->render('category/index.html.twig', ['categories' => $categoryRepository->findBy(array(), array('lft' => 'ASC'))]);
+        if (null !== $parent){
+            $categories = $categoryRepository->findBy(array("parent" => $parent), array('lft' => 'ASC'));
+        }
+        else{
+            $categories = $categoryRepository->findBy(array("lvl" => 0), array('lft' => 'ASC'));
+        }
+
+        return $this->render('category/index.html.twig', [ 'parent' => $parent, 'categories' => $categories]);
     }
 
     /**
@@ -46,7 +54,7 @@ class CategoryController extends Controller
     }
 
     /**
-     * @Route("/{id}", name="category_show", methods={"GET", "POST"})
+     * @Route("/show/{id}", name="category_show", methods={"GET", "POST"})
      */
     public function show(Request $request, Category $category): Response
     {
@@ -125,5 +133,13 @@ class CategoryController extends Controller
         }
 
         return $this->redirectToRoute('category_index');
+    }
+
+
+    public function menu()
+    {
+        $categoryRepository = $this->getDoctrine()->getRepository('AppBundle:Category');
+
+        return $this->render('category/menu.html.twig', ['categories' => $categoryRepository->findBy(array('lvl' => 0), array('lft' => 'ASC'))]);
     }
 }

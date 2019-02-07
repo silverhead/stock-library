@@ -1,0 +1,20 @@
+<tr class="{% if subtree == true %}subTree childrenOf_{{ parent.id }}{% endif %}">
+    <td style="padding-left: {{ category.lvl * 20 }}px">{{ category.label }}</td>
+    <td>{{ category.description }}</td>
+    <td>
+        {% if category.picture is not empty %}
+            <img src="{{ asset(category.getPictureWebPath) }}" style="height:100px" />
+        {% endif %}
+    </td>
+    <td>
+
+        {% if category.getChildren()|length > 0 %}
+            <a href="#" class="btn btn-info showChildren" data-id="{{ category.id }}"><i class="fas fa-plus-square"></i></a>
+        {% endif %}
+        {% include 'common/viewLink.html.twig' with {'path': path('category_show', {'id': category.id})} %}
+        {% include 'common/editLink.html.twig' with {'path': path('category_edit', {'id': category.id})} %}
+    </td>
+</tr>
+{% for subCategory in category.getChildren() %}
+    {% include 'category/listDetail.html.twig' with {'parent': category , 'category': subCategory, 'subtree': true } %}
+{% endfor %}
