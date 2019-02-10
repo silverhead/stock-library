@@ -2,6 +2,7 @@
 
 namespace AppBundle\Repository;
 
+use AppBundle\Entity\Category;
 use AppBundle\Entity\Storage;
 use AppBundle\Entity\User;
 use Doctrine\ORM\EntityRepository;
@@ -42,7 +43,7 @@ class ProductRepository extends EntityRepository
             ->getQuery()->getResult();
     }
 
-    public function findProductsByStorageAndUser(Storage $storage, User $user)
+    public function findProductsByStorageAndUser(Storage $storage, User $user, $orders = array('p.label' => 'ASC'))
     {
         $ids = $storage->getChildren()->map(function($child){
             return $child->getId();
@@ -50,14 +51,41 @@ class ProductRepository extends EntityRepository
 
         $ids->add($storage->getId());
 
-        return $this->createQueryBuilder("p")
+        $qb = $this->createQueryBuilder("p")
             ->select("p, pu")
             ->Join('p.productByUser', 'pu')
             ->where("pu.user = :user")
             ->setParameter("user", $user)
             ->andWhere("pu.storage in (:ids)")
             ->setParameter("ids", implode(",", $ids->toArray()))
-            ->getQuery()->getResult();
+            ;
+
+        foreach ($orders as $sort => $order){
+            $qb->addOrderBy($sort, $order);
+        }
+
+        return $qb->getQuery()->getResult();
+    }
+
+    public function findProductsByCategory(Category $category, $orders)
+    {
+        $ids = $category->getChildren()->map(function($child){
+            return $child->getId();
+        });
+
+        $ids->add($category->getId());
+
+        $qb = $this->createQueryBuilder("p")
+            ->select("p")
+            ->join("p.categories", "c")
+            ->where("c.id in (:ids)")
+            ->setParameter("ids", implode(",", $ids->toArray()));
+
+        foreach ($orders as $sort => $order){
+            $qb->addOrderBy($sort, $order);
+        }
+
+        return $qb->getQuery()->getResult();
     }
 
     public function findPaginatorProducts($orders, int $start, int $offset): Paginator

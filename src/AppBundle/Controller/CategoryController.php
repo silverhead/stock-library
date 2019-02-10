@@ -18,21 +18,39 @@ use Symfony\Component\Routing\Annotation\Route;
 class CategoryController extends Controller
 {
     /**
-     * @Route("/sub/{id}", name="category_sub_list", methods="GET")
-     * @Route("/", name="category_index", methods="GET")
+     * @Route("/list/sub/{id}/{page}", name="category_sub_list", methods="GET", defaults={"page"=1})
+     * @Route("/list/{page}", name="category_index", methods="GET", defaults={"page"=1})
      */
-    public function index(Category $parent = null): Response
+    public function index(Category $parent = null, int $page): Response
     {
+        if($page < 1){
+            $page = 1;
+        }
+
+        $nbItem = 10;
+        $start = ($page-1) * $nbItem;
+
         $categoryRepository = $this->getDoctrine()->getRepository('AppBundle:Category');
 
         if (null !== $parent){
-            $categories = $categoryRepository->findBy(array("parent" => $parent), array('lft' => 'ASC'));
+            $categories = $categoryRepository->findByPaginate(array("parent" => $parent), array('lft' => 'ASC'), $start, $nbItem);
         }
         else{
-            $categories = $categoryRepository->findBy(array("lvl" => 0), array('lft' => 'ASC'));
+            $categories = $categoryRepository->findByPaginate(array("lvl" => 0), array('lft' => 'ASC'), $start, $nbItem);
         }
 
-        return $this->render('category/index.html.twig', [ 'parent' => $parent, 'categories' => $categories]);
+        $pagination = array(
+            'page' => $page,
+            'nbPages' => ceil(count($categories) / $nbItem),
+            'nomRoute' => 'product_index',
+            'paramsRoute' => array()
+        );
+
+        return $this->render('category/index.html.twig', [
+            'parent' => $parent,
+            'categories' => $categories,
+            'pagination' => $pagination
+        ]);
     }
 
     /**
@@ -44,7 +62,14 @@ class CategoryController extends Controller
         $form = $this->createForm(CategoryType::class, $category);
 
         if ($this->handleForm($form, $category, $request)){
-            return $this->redirectToRoute('category_index');
+            if (null !== $category->getParent()){
+                return $this->redirectToRoute('category_sub_list', array(
+                    'id' => $category->getParent()->getId()
+                ));
+            }
+            else{
+                return $this->redirectToRoute('category_index');
+            }
         }
 
         return $this->render('category/new.html.twig', [
@@ -58,10 +83,16 @@ class CategoryController extends Controller
      */
     public function show(Request $request, Category $category): Response
     {
-        $documentRepo = $this->getDoctrine()->getRepository('AppBundle:DocumentCategory');
+        $doctrine = $this->getDoctrine();
+
+        $documentRepo = $doctrine->getRepository('AppBundle:DocumentCategory');
         $documents = $documentRepo->findBy(array(
             'category' => $category
         ));
+
+        $categoryRepo = $doctrine->getRepository('AppBundle:Category');
+        $productRepo = $doctrine->getRepository('AppBundle:Product');
+        $storageRepo = $doctrine->getRepository('AppBundle:Storage');
 
         $documentForm = $this->get('app.service.document_form');
         $documentForm->setForm(New DocumentCategory());
@@ -69,18 +100,34 @@ class CategoryController extends Controller
             return $this->redirectToRoute('category_show', ['id' => $category->getId()]);
         }
 
-        return $this->render('category/show.html.twig', ['category' => $category, 'documentForm'=> $documentForm, 'documents' => $documents]);
+        $products = $productRepo->findProductsByCategory($category, array('p.label' => 'ASC'));
+
+        return $this->render('category/show.html.twig', [
+            'categoryRepo' => $categoryRepo,
+            'storageRepo' => $storageRepo,
+            'category' => $category,
+            'documentForm'=> $documentForm,
+            'documents' => $documents,
+            'products' => $products
+        ]);
     }
 
     /**
-     * @Route("/{id}/edit", name="category_edit", methods="GET|POST")
+     * @Route("/edit/{id}", name="category_edit", methods="GET|POST")
      */
     public function edit(Request $request, Category $category): Response
     {
         $form = $this->createForm(CategoryType::class, $category);
 
         if ($this->handleForm($form, $category, $request)){
-            return $this->redirectToRoute('category_index');
+            if (null !== $category->getParent()){
+                return $this->redirectToRoute('category_sub_list', array(
+                    'id' => $category->getParent()->getId()
+                ));
+            }
+            else{
+                return $this->redirectToRoute('category_index');
+            }
         }
 
         return $this->render('category/edit.html.twig', [
@@ -122,7 +169,7 @@ class CategoryController extends Controller
     }
 
     /**
-     * @Route("/{id}", name="category_delete", methods="DELETE")
+     * @Route("/delete/{id}", name="category_delete", methods="DELETE")
      */
     public function delete(Request $request, Category $category): Response
     {

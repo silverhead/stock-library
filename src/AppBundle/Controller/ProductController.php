@@ -24,7 +24,7 @@ use AppBundle\Form\SearchProductType;
 class ProductController extends Controller
 {
     /**
-     * @Route("/products/{page}", name="product_index", methods="GET", defaults={"page"=1})
+     * @Route("/list/{page}", name="product_index", methods="GET", defaults={"page"=1})
      */
     public function index(Request $request, $page): Response
     {
@@ -88,7 +88,7 @@ class ProductController extends Controller
     }
 
     /**
-     * @Route("/{id}", name="product_show", methods={"GET", "POST"})
+     * @Route("/show/{id}", name="product_show", methods={"GET", "POST"})
      */
     public function show(Request $request, Product $product): Response
     {
