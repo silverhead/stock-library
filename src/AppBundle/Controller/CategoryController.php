@@ -42,8 +42,8 @@ class CategoryController extends Controller
         $pagination = array(
             'page' => $page,
             'nbPages' => ceil(count($categories) / $nbItem),
-            'nomRoute' => 'product_index',
-            'paramsRoute' => array()
+            'nomRoute' => $parent == null ?'product_index':'category_sub_list',
+            'paramsRoute' => $parent == null?array(): array('id'=>$parent->getId())
         );
 
         return $this->render('category/index.html.twig', [
