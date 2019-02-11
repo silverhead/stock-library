@@ -54,11 +54,17 @@ class CategoryController extends Controller
     }
 
     /**
-     * @Route("/new", name="category_new", methods="GET|POST")
+     * @Route("/new/{parent}", name="category_new", methods="GET|POST", defaults={"parent"=null})
      */
-    public function new(Request $request): Response
+    public function new(Request $request, $parent = null): Response
     {
         $category = new Category();
+        if (null !== $parent){
+            $categoryRepo = $this->getDoctrine()->getRepository("AppBundle:Category");
+            $catParent =  $categoryRepo->find($parent);
+            $category->setParent($catParent);
+        }
+
         $form = $this->createForm(CategoryType::class, $category);
 
         if ($this->handleForm($form, $category, $request)){
@@ -73,6 +79,7 @@ class CategoryController extends Controller
         }
 
         return $this->render('category/new.html.twig', [
+            'parent' => $parent,
             'category' => $category,
             'form' => $form->createView(),
         ]);

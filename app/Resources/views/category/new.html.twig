@@ -5,7 +5,11 @@
 {% block body %}
     <div class="row">
         <div class="col-md-12">
-            <h1><a href="{{ path('category_index') }}" class="btn btn-light">Retour</a> Nouvelle catégorie</h1>
+            {% set backLink =  path('category_index') %}
+            {% if parent is not null %}
+                {% set backLink =  path('category_sub_list', {id: parent}) %}
+            {% endif %}
+            <h1><a href="{{ backLink }}" class="btn btn-light">Retour</a> Nouvelle catégorie</h1>
         </div>
     </div>
     <div class="row">

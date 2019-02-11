@@ -14,7 +14,11 @@
 </div>
 <div class="row">
     <div class="col-md-12">
-        <p>{% include 'common/addLink.html.twig' with {'path': path('category_new'), 'label': 'Ajouter une nouvelle catégorie'} %}</p>
+        {% set addPath =  path('category_new') %}
+        {% if parent is not null %}
+            {% set addPath = path('category_new', {'parent': parent.id}) %}
+        {% endif %}
+        <p>{% include 'common/addLink.html.twig' with {'path': addPath, 'label': 'Ajouter une nouvelle catégorie'} %}</p>
     </div>
 </div>
 <div class="row">
