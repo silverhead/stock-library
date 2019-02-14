@@ -63,6 +63,7 @@ class CategoryController extends Controller
             $categoryRepo = $this->getDoctrine()->getRepository("AppBundle:Category");
             $catParent =  $categoryRepo->find($parent);
             $category->setParent($catParent);
+            $category->setRoot($catParent);
         }
 
         $form = $this->createForm(CategoryType::class, $category);

@@ -4,7 +4,7 @@
 
 {% block body %}
     <div class="row">
-        <div class="col-md-12"><h1><a href="{{ path('category_index') }}" class="btn btn-light">Retour</a> Catégorie : "{{ category.label }}"</h1></div>
+        <div class="col-md-12"><h1>{% include 'category/backlink.html.twig' %} Catégorie : "{{ category.label }}"</h1></div>
     </div>
 <div class="row">
     <div class="col-md-8">

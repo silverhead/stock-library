@@ -1,0 +1,5 @@
+{% set backLink =  path('category_index') %}
+{% if category.root is not null %}
+    {% set backLink =  path('category_sub_list', {id: category.root.id}) %}
+{% endif %}
+<a href="{{ backLink }}" class="btn btn-light">Retour</a>

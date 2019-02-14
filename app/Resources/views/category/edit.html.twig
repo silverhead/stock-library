@@ -5,11 +5,7 @@
 {% block body %}
     <div class="row">
         <div class="col-md-12">
-            {% set backLink =  path('category_index') %}
-            {% if category.parent is not null %}
-                {% set backLink =  path('category_sub_list', {id: category.parent.id}) %}
-            {% endif %}
-            <h1><a href="{{ backLink }}" class="btn btn-light">Retour</a> Edition de la catégorie "{{ category.label }}"</h1>
+            <h1>{% include 'category/backlink.html.twig' %} Edition de la catégorie "{{ category.label }}"</h1>
         </div>
     </div>
     <div class="row">
