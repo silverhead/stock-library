@@ -88,9 +88,35 @@ class ProductRepository extends EntityRepository
         return $qb->getQuery()->getResult();
     }
 
-    public function findPaginatorProducts($orders, int $start, int $offset): Paginator
+    public function findPaginatorProducts($criteria, $orders, int $start, int $offset): Paginator
     {
         $qb = $this->createQueryBuilder('p');
+        $qb->select("p, productByUser")
+            ->leftJoin("p.productByUser", "productByUser");
+
+        foreach ($criteria as $propriety => $criterion){
+
+            $exp = null;
+
+            switch ($criterion->operator){
+                case 'in':
+                    $exp = $qb->expr()->in($propriety, $criterion->search);
+                    break;
+                case 'like%':
+                    $exp = $qb->expr()->like($propriety, $qb->expr()->literal($criterion->search . '%') );
+                    break;
+                case '%like%':
+                    $exp = $qb->expr()->like($propriety, $qb->expr()->literal('%'. $criterion->search . '%') );
+                    break;
+                case 'equal':
+                    $exp = $qb->expr()->eq($propriety, $criterion->search);
+                    break;
+            }
+
+            if (null !== $exp){
+                $qb->andWhere($exp);
+            }
+        }
 
         foreach ($orders as $sort => $order){
             $qb->addOrderBy($sort, $order);

@@ -24,7 +24,7 @@ use AppBundle\Form\SearchProductType;
 class ProductController extends Controller
 {
     /**
-     * @Route("/list/{page}", name="product_index", methods="GET", defaults={"page"=1})
+     * @Route("/list/{page}", name="product_index", methods="GET|POST", defaults={"page"=1})
      */
     public function index(Request $request, $page): Response
     {
@@ -41,7 +41,13 @@ class ProductController extends Controller
         $nbItem = 10;
         $start = ($page-1) * $nbItem;
 
+        $productFilter = $this->get("app.form.handler.product_filter");
+
+        $productFilter->handlerForm($request);
+        $criteria = $productFilter->getCriteria($this->getUser());
+
         $products = $productRepository->findPaginatorProducts(
+            $criteria,
             array('p.label' => 'ASC'),
             $start,
             $nbItem
@@ -58,7 +64,8 @@ class ProductController extends Controller
             'products' => $products,
             'pagination' => $pagination,
             'categoryRepo' => $categoryRepo,
-            'storageRepo' => $storageRepo
+            'storageRepo' => $storageRepo,
+            'productFilterTpl' => $productFilter->renderForm()
         ] );
     }
 

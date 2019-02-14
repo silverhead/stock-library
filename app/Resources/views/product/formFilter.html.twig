@@ -1,0 +1,37 @@
+<p>
+    <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseProductListFilter" aria-expanded="false" aria-controls="collapseProductListFilter">
+        Afficher les filtres
+    </button>
+</p>
+<div class="collapse" id="collapseProductListFilter">
+    <div class="card card-body">
+        {{ form_start(form) }}
+        <div class="row">
+            <div class="col-md-6">
+                {{ form_row(form.label, {'label': 'Libellé'}) }}
+            </div>
+            <div class="col-md-6">
+                {{ form_row(form.reference, {'label': 'référence'}) }}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                {{ form_row(form.categories, {'label': 'Catégories'}) }}
+            </div>
+            <div class="col-md-6">
+                {{ form_row(form.storage, {'label': 'Rangements'}) }}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                {{ form_row(form.haveProductOnly, {'label': "Produit que j'ai uniquement ? "}) }}
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <input type="submit" value="Filter" class="btn btn-dark">
+            </div>
+        </div>
+        {{ form_end(form) }}
+    </div>
+</div>
