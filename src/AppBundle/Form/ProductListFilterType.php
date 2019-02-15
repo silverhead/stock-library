@@ -3,6 +3,7 @@
 namespace AppBundle\Form;
 
 use AppBundle\Entity\Category;
+use AppBundle\Entity\Product;
 use AppBundle\Entity\Storage;
 use AppBundle\Form\Model\ProductListFilterModel;
 use Doctrine\ORM\EntityRepository;

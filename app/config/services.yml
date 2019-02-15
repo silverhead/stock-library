@@ -38,7 +38,7 @@ services:
         arguments: ['@form.factory', '@doctrine.orm.entity_manager', '@stof_doctrine_extensions.uploadable.manager', '@templating']
     app.form.handler.product_filter:
         class: AppBundle\Form\Handler\ProductListFilterFormHandler
-        arguments: ['@form.factory', '@templating']
+        arguments: ['@form.factory', '@templating', '@session']
     # add more services, or override services that need manual wiring
     # AppBundle\Service\ExampleService:
     #     arguments:

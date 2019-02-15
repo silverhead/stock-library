@@ -10,6 +10,7 @@ use Doctrine\ORM\Tools\Pagination\Paginator;
 
 class ProductRepository extends EntityRepository
 {
+    use FilterQueryBuilderHelperTrait;
 
     public function searchByLabel($search)
     {
@@ -91,32 +92,12 @@ class ProductRepository extends EntityRepository
     public function findPaginatorProducts($criteria, $orders, int $start, int $offset): Paginator
     {
         $qb = $this->createQueryBuilder('p');
-        $qb->select("p, productByUser")
-            ->leftJoin("p.productByUser", "productByUser");
+        $qb->select("p, productByUser, category")
+            ->leftJoin("p.productByUser", "productByUser")
+            ->leftJoin("p.categories", "category")
+        ;
 
-        foreach ($criteria as $propriety => $criterion){
-
-            $exp = null;
-
-            switch ($criterion->operator){
-                case 'in':
-                    $exp = $qb->expr()->in($propriety, $criterion->search);
-                    break;
-                case 'like%':
-                    $exp = $qb->expr()->like($propriety, $qb->expr()->literal($criterion->search . '%') );
-                    break;
-                case '%like%':
-                    $exp = $qb->expr()->like($propriety, $qb->expr()->literal('%'. $criterion->search . '%') );
-                    break;
-                case 'equal':
-                    $exp = $qb->expr()->eq($propriety, $criterion->search);
-                    break;
-            }
-
-            if (null !== $exp){
-                $qb->andWhere($exp);
-            }
-        }
+        $this->filter($qb, $criteria);
 
         foreach ($orders as $sort => $order){
             $qb->addOrderBy($sort, $order);

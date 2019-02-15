@@ -1,0 +1,1 @@
+$("form[name=app_bundle_product_list_filter_form] select[multiple='multiple']").bsMultiSelect();
