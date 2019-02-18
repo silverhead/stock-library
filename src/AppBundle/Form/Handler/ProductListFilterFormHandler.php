@@ -62,7 +62,7 @@ class ProductListFilterFormHandler
 
     private function getDataFromSession()
     {
-        return unserialize($this->session->get('app_product_list_filter', new ProductListFilterModel()));
+        return unserialize($this->session->get('app_product_list_filter', serialize(new ProductListFilterModel())));
     }
 
     public function handlerForm(Request $request)
