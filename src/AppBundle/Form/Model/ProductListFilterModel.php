@@ -48,7 +48,7 @@ class ProductListFilterModel
      * @param string $label
      * @return ProductListFilterModel
      */
-    public function setLabel(string $label): ProductListFilterModel
+    public function setLabel(string $label = null): ProductListFilterModel
     {
         $this->label = $label;
 
@@ -67,7 +67,7 @@ class ProductListFilterModel
      * @param string $reference
      * @return ProductListFilterModel
      */
-    public function setReference(string $reference): ProductListFilterModel
+    public function setReference(string $reference = null): ProductListFilterModel
     {
         $this->reference = $reference;
 
