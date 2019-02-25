@@ -244,7 +244,7 @@ class ProductController extends Controller
         $productByUserList = $product->getProductByUserFiltered($this->getUser());
 
         if (null !== $productByUserList && $productByUserList->count() == 1){
-            $productByUser = $productByUserList[0];
+            $productByUser = $productByUserList->first();
         }
 
         $productByUser->setUser($this->getUser());

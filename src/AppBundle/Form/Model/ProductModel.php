@@ -82,9 +82,9 @@ class ProductModel
         $this->quantityLimitAlert = 0;
 
         if (null !== $productByUser && $productByUser->count() > 0){
-            $this->storage = $productByUser[0]->getStorage();
-            $this->quantity = $productByUser[0]->getQuantity();
-            $this->quantityLimitAlert = $productByUser[0]->getQuantityLimitAlert();
+            $this->storage = $productByUser->first()->getStorage();
+            $this->quantity = $productByUser->first()->getQuantity();
+            $this->quantityLimitAlert = $productByUser->first()->getQuantityLimitAlert();
         }
     }
 
