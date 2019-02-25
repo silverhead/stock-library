@@ -32,7 +32,7 @@
             </td>
             <td>
                 {% if product.getProductByUserFiltered(app.getUser())|length > 0 %}
-                    {% for sto in storageRepo.getPath(product.getProductByUserFiltered(app.getUser())[0].storage) %}
+                    {% for sto in storageRepo.getPathByUser(product.getProductByUserFiltered(app.getUser()).first().storage, app.getUser()) %}
                         {{ sto.label }}
                         {% if loop.index != loop.last %}/{% endif %}
                     {% endfor %}
@@ -40,7 +40,7 @@
                     Aucun rangement définie
                 {% endif %}
              </td>
-            <td class="text-center">{% if product.getProductByUserFiltered(app.getUser())|length > 0 %} {{ product.getProductByUserFiltered(app.getUser())[0].quantity }}{% else %}0{% endif %}</td>
+            <td class="text-center">{% if product.getProductByUserFiltered(app.getUser())|length > 0 %} {{ product.getProductByUserFiltered(app.getUser()).first().quantity }}{% else %}0{% endif %}</td>
             <td>
                 {% include 'common/viewLink.html.twig' with {'path': path('product_show', {'id': product.id})} %}
                 {% include 'common/editLink.html.twig' with {'path': path('product_edit', {'id': product.id})} %}

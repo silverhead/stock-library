@@ -6,7 +6,7 @@ use AppBundle\Entity\Storage;
 use AppBundle\Entity\User;
 use Gedmo\Tool\Wrapper\EntityWrapper;
 use Gedmo\Tree\Entity\Repository\NestedTreeRepository;
-use http\Exception\InvalidArgumentException;
+use Gedmo\Exception\InvalidArgumentException;
 
 /**
  * StockageRepository
