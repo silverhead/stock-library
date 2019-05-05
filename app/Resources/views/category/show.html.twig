@@ -19,7 +19,7 @@
                     <div class="col-md-12">
                         <p><a href="{{ path('category_edit', {'id': category.id}) }}" class="btn btn-warning">Modifier</a></p>
                         <h2>Description</h2>
-                        <div>{{ category.description }}</div>
+                        <div>{{ category.description|nl2br }}</div>
                     </div>
                 </div>
             </div>
