@@ -1,27 +1,26 @@
-
-<table class="table">
+<table class="table table-fixed">
     <thead>
     <tr>
-        <th class="w-15">Libellé</th>
-        <th class="w-10">Référence</th>
+        <th class="w-15">Libellé <i class="fas fa-sort-up float-right"></i></th>
+        <th class="w-15">Référence <i class="fas fa-sort float-right"></i></th>
         <th class="w-10">Photo</th>
-        <th class="w-15">Categories</th>
-        <th class="w-15">Rangement</th>
-        <th class="w-05">Quantité</th>
-        <th class="w-10">actions</th>
+        <th class="w-15">Categories <i class="fas fa-sort float-right"></i></th>
+        <th class="w-15">Rangement <i class="fas fa-sort float-right"></i></th>
+        <th class="w-10">Quantité <i class="fas fa-sort float-right"></i></th>
+        <th class="w-15">actions</th>
     </tr>
     </thead>
     <tbody>
     {% for product in products %}
         <tr>
-            <td>{{ product.label }}</td>
-            <td>{{ product.reference}}</td>
-            <td>
+            <td class="w-15">{{ product.label }}</td>
+            <td class="w-15">{{ product.reference }}</td>
+            <td class="w-10">
                 {% if product.picture is not empty %}
                     <img src="{{ asset(product.getPictureWebPath()) }}" height="80">
                 {% endif %}
             </td>
-            <td>
+            <td class="w-15">
                 {% for category in product.categories %}
                     {% for cat in categoryRepo.getPath(category) %}
                         {{ cat.label }}
@@ -30,7 +29,7 @@
                     <br />
                 {% endfor %}
             </td>
-            <td>
+            <td class="w-10">
                 {% if product.getProductByUserFiltered(app.getUser())|length > 0 %}
                     {% for sto in storageRepo.getPathByUser(product.getProductByUserFiltered(app.getUser()).first().storage, app.getUser()) %}
                         {{ sto.label }}
@@ -40,10 +39,10 @@
                     Aucun rangement définie
                 {% endif %}
              </td>
-            <td class="text-center">{% if product.getProductByUserFiltered(app.getUser())|length > 0 %} {{ product.getProductByUserFiltered(app.getUser()).first().quantity }}{% else %}0{% endif %}</td>
-            <td>
-                {% include 'common/viewLink.html.twig' with {'path': path('product_show', {'id': product.id})} %}
-                {% include 'common/editLink.html.twig' with {'path': path('product_edit', {'id': product.id})} %}
+            <td class="text-center w-10">{% if product.getProductByUserFiltered(app.getUser())|length > 0 %} {{ product.getProductByUserFiltered(app.getUser()).first().quantity }}{% else %}0{% endif %}</td>
+            <td class="w-15">
+                {% include 'common/viewLink.html.twig' with {'path': path('product_show', {'id': product.id}), 'class': 'fleft'} %}
+                {% include 'common/editLink.html.twig' with {'path': path('product_edit', {'id': product.id}), 'class': 'fleft'} %}
             </td>
         </tr>
     {% else %}

@@ -21,7 +21,12 @@
 </div>
 <div class="row">
     <div class="col-md-12 ">
-        {{ productFilterTpl|raw }}
+        <div class="row">
+            <div class="col-md-12">
+                {{ productFilterTpl|raw }}
+            </div>
+        </div>
+        {{ productSorterTpl|raw }}
         {% include 'product/list.html.twig' %}
     </div>
 </div>

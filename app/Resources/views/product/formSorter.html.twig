@@ -1,0 +1,21 @@
+<div class="card card-body">
+    {{ form_start(form) }}
+    <div class="row">
+        <div class="col-md-3">
+            {{ form_widget(form.productLabelOrder) }}
+        </div>
+        <div class="col-md-3">
+            {{ form_widget(form.categoryLabelOrder) }}
+        </div>
+        <div class="col-md-3">
+            {{ form_widget(form.storageLabelOrder) }}
+        </div>
+        <div class="col-md-2">
+            {{ form_widget(form.quantityOrder) }}
+        </div>
+        <div class="col-md-1">
+            <input type="submit" value="Trier" class="btn btn-secondary">
+        </div>
+    </div>
+    {{ form_end(form) }}
+</div>

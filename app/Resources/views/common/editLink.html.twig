@@ -1,1 +1,2 @@
-<a href="{{ path }}" class="btn btn-warning"><i class="fas fa-edit"></i></a>
+{% if class is not defined %}{% set class = "" %}{% endif %}
+<a href="{{ path }}" class="btn btn-warning {{ class }}"><i class="fas fa-edit"></i></a>

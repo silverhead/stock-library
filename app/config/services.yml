@@ -39,6 +39,9 @@ services:
     app.form.handler.product_filter:
         class: AppBundle\Form\Handler\ProductListFilterFormHandler
         arguments: ['@form.factory', '@templating', '@session']
+    app.form.handler.product_sorter:
+        class: AppBundle\Form\Handler\ProductListSorterFormHandler
+        arguments: ['@form.factory', '@templating', '@session']
     # add more services, or override services that need manual wiring
     # AppBundle\Service\ExampleService:
     #     arguments:

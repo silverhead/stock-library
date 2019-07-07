@@ -42,13 +42,17 @@ class ProductController extends Controller
         $start = ($page-1) * $nbItem;
 
         $productFilter = $this->get("app.form.handler.product_filter");
+        $productSorter = $this->get("app.form.handler.product_sorter");
 
         $productFilter->handlerForm($request);
         $criteria = $productFilter->getCriteria($this->getUser());
 
+        $productSorter->handlerForm($request);
+        $sorter = $productSorter->getSorter();
+
         $products = $productRepository->findPaginatorProducts(
             $criteria,
-            array('p.label' => 'ASC'),
+            $sorter,
             $start,
             $nbItem
         );
@@ -65,7 +69,8 @@ class ProductController extends Controller
             'pagination' => $pagination,
             'categoryRepo' => $categoryRepo,
             'storageRepo' => $storageRepo,
-            'productFilterTpl' => $productFilter->renderForm()
+            'productFilterTpl' => $productFilter->renderForm(),
+            'productSorterTpl' => $productSorter->renderForm()
         ] );
     }
 

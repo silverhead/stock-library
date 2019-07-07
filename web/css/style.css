@@ -2,6 +2,12 @@ body {
     font-size: .875rem;
 }
 
+table td[class*=w-], table th[class*=w-] {
+    position: static;
+    display: table-cell;
+    float: none;
+}
+
 .w-05{
     width: 5% !important;
 }
@@ -34,6 +40,11 @@ body {
     width: 16px;
     height: 16px;
     vertical-align: text-bottom;
+}
+
+.fleft{
+    float: left;
+    margin: 0 1px;
 }
 
 /*
@@ -139,3 +150,41 @@ body {
 tr.subTree{
     display: none;
 }
+
+.table-fixed tbody {
+    height: 400px;
+    overflow-y: auto;
+    width: 100%;
+}
+.table-fixed thead,
+.table-fixed tbody,
+.table-fixed tr,
+.table-fixed td,
+.table-fixed th {
+    display: block;
+}
+.table-fixed tr:after {
+    content: "";
+    display: block;
+    visibility: hidden;
+    clear: both;
+}
+.table-fixed tbody td,
+.table-fixed thead > tr > th {
+    float: left;
+}
+/*
+.table-fixed thead, .table-fixed tbody, .table-fixed tr, .table-fixed th, .table-fixed td{
+    display: block;
+}
+.table-fixed tbody{
+    height: 400px;
+    overflow: auto;
+    width: 100%;
+}
+
+table.table-fixed thead th, table.table-fixed tbody td{
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+*/

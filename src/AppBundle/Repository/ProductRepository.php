@@ -95,6 +95,7 @@ class ProductRepository extends EntityRepository
         $qb->select("p, productByUser, category")
             ->leftJoin("p.productByUser", "productByUser")
             ->leftJoin("p.categories", "category")
+            ->leftJoin("productByUser.storage", "storage")
         ;
 
         $this->filter($qb, $criteria);
