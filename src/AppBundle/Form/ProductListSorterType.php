@@ -16,32 +16,32 @@ class ProductListSorterType extends AbstractType
             ->add('productLabelOrder', ChoiceType::class, array(
                 'required' => true,
                 'choices' => array(
-                    'Produit ascendant' => 'ASC',
-                    'Produit descendant' => 'DESC',
+                    'Produit croissant' => 'ASC',
+                    'Produit décroissant' => 'DESC',
                     'Produit non trié' => '',
                 )
             ))
             ->add('categoryLabelOrder', ChoiceType::class, array(
                 'required' => true,
                 'choices' => array(
-                    'categorie ascendant' => 'ASC',
-                    'categorie descendant' => 'DESC',
+                    'categorie croissant' => 'ASC',
+                    'categorie décroissant' => 'DESC',
                     'categorie non triée' => '',
                 )
             ))
             ->add('storageLabelOrder', ChoiceType::class, array(
                 'required' => true,
                 'choices' => array(
-                    'rangement ascendant' => 'ASC',
-                    'rangement descendant' => 'DESC',
+                    'rangement croissant' => 'ASC',
+                    'rangement décroissant' => 'DESC',
                     'rangement non triée' => '',
                 )
             ))
             ->add('quantityOrder', ChoiceType::class, array(
                 'required' => true,
                 'choices' => array(
-                    'quantité ascendant' => 'ASC',
-                    'quantité descendant' => 'DESC',
+                    'quantité croissant' => 'ASC',
+                    'quantité décroissant' => 'DESC',
                     'quantité non triée' => '',
                 )
             ))

@@ -173,18 +173,3 @@ tr.subTree{
 .table-fixed thead > tr > th {
     float: left;
 }
-/*
-.table-fixed thead, .table-fixed tbody, .table-fixed tr, .table-fixed th, .table-fixed td{
-    display: block;
-}
-.table-fixed tbody{
-    height: 400px;
-    overflow: auto;
-    width: 100%;
-}
-
-table.table-fixed thead th, table.table-fixed tbody td{
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-*/

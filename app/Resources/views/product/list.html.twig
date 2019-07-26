@@ -1,12 +1,12 @@
 <table class="table table-fixed">
     <thead>
     <tr>
-        <th class="w-15">Libellé <i class="fas fa-sort-up float-right"></i></th>
-        <th class="w-15">Référence <i class="fas fa-sort float-right"></i></th>
+        <th class="w-15">Libellé</th>
+        <th class="w-15">Référence</th>
         <th class="w-10">Photo</th>
-        <th class="w-15">Categories <i class="fas fa-sort float-right"></i></th>
-        <th class="w-15">Rangement <i class="fas fa-sort float-right"></i></th>
-        <th class="w-10">Quantité <i class="fas fa-sort float-right"></i></th>
+        <th class="w-15">Categories</th>
+        <th class="w-15">Rangement</th>
+        <th class="w-10">Quantité</th>
         <th class="w-15">actions</th>
     </tr>
     </thead>
@@ -29,7 +29,7 @@
                     <br />
                 {% endfor %}
             </td>
-            <td class="w-10">
+            <td class="w-15">
                 {% if product.getProductByUserFiltered(app.getUser())|length > 0 %}
                     {% for sto in storageRepo.getPathByUser(product.getProductByUserFiltered(app.getUser()).first().storage, app.getUser()) %}
                         {{ sto.label }}

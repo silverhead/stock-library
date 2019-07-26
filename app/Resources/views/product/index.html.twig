@@ -15,8 +15,13 @@
     </div>
 </div>
 <div class="row">
-    <div class="col-md-12">
+    <div class="col-md-10">
         <p>{% include 'common/addLink.html.twig' with {'path': path('product_new'), 'label': 'Ajouter un nouveau produit'} %}</p>
+    </div>
+    <div class="col-md-2">
+        <p>
+        {% include 'product/buttonDisplayFilter.html.twig' %}
+        </p>
     </div>
 </div>
 <div class="row">
