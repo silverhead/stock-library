@@ -113,15 +113,15 @@ class ProductListFilterFormHandler
 
         if (null !== $this->model->getCategories() && $this->model->getCategories()->count() > 0){
             $criteria['category.id'] = (object) array(
-                'operator' => 'in',
-                'search' => $this->model->getCategories()->map(function($category){ return $category->getId();  })->toArray()
+                'operator' => 'allOfCat',
+                'search' => $this->model->getCategories()
             );
         }
 
         if (null !== $this->model->getStorage() && $this->model->getStorage()->count() > 0){
             $criteria['productByUser.storage'] = (object) array(
-                'operator' => 'in',
-                'search' => $this->model->getStorage()->map(function($storage){ return $storage->getId();  })->toArray()
+                'operator' => 'allOfStorage',
+                'search' => $this->model->getStorage()
             );
         }
 

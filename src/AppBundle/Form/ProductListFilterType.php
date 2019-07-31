@@ -27,11 +27,21 @@ class ProductListFilterType extends AbstractType
             ->add('categories', EntityType::class, array(
                 'class' => Category::class,
                 'query_builder' => function (EntityRepository $er) {
-                    return $er->createQueryBuilder('c');
+                    return $er->createQueryBuilder('c')
+                                ->addOrderBy('c.root', 'ASC')
+                                ->addOrderBy('c.lft', 'ASC')
+                        ;
                 },
                 'required' => false,
                 'choice_value' => 'id',
-                'choice_label' => 'label',
+                'choice_label' => function($cat){
+                    $label = "";
+                    for($i=0;$i < $cat->getLvl();$i++ ){
+                        $label .= "-";
+                    }
+                    $label .= $cat->getLabel();
+                    return $label;
+                 },
                 'multiple' => true,
                 'expanded' => false
             ))
@@ -42,7 +52,14 @@ class ProductListFilterType extends AbstractType
                 },
                 'required' => false,
                 'choice_value' => 'id',
-                'choice_label' => 'label',
+                'choice_label' => function($storage){
+                    $label = "";
+                    for($i=0; $i < $storage->getLvl(); $i++ ){
+                        $label .= "-";
+                    }
+                    $label .= $storage->getLabel();
+                    return $label;
+                },
                 'multiple' => true,
                 'expanded' => false
             ))

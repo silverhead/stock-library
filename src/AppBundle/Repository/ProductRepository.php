@@ -5,6 +5,7 @@ namespace AppBundle\Repository;
 use AppBundle\Entity\Category;
 use AppBundle\Entity\Storage;
 use AppBundle\Entity\User;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 
@@ -100,6 +101,49 @@ class ProductRepository extends EntityRepository
 
         $this->filter($qb, $criteria);
 
+        foreach ($criteria  as $property => $criterion) {
+            switch ($criterion->operator){
+                case 'allOfCat':
+                    /**
+                     * @var ArrayCollection
+                     */
+                    $storages = $criterion->search;
+
+                    if ($storages->count() == 1){
+                        $storage = $storages->first();
+                        $qb->andWhere("category.lft >= :lft")->setParameter("lft", $storage->getLft());
+                        $qb->andWhere("category.rgt <= :rgt")->setParameter("rgt", $storage->getRgt());
+                    }
+                    else{
+                        $qb->andWhere($qb->expr()->in("category.id",
+                            implode(",",
+                                $storages->map(function($cat){ return $cat->getId(); })->toArray()
+                            )));
+                    }
+
+                    break;
+                case 'allOfStorage':
+                    /**
+                     * @var ArrayCollection
+                     */
+                    $storages = $criterion->search;
+
+                    if ($storages->count() == 1){
+                        $storage = $storages->first();
+                        $qb->andWhere("storage.lft >= :lft")->setParameter("lft", $storage->getLft());
+                        $qb->andWhere("storage.rgt <= :rgt")->setParameter("rgt", $storage->getRgt());
+                    }
+                    else{
+                        $qb->andWhere($qb->expr()->in("storage.id",
+                            implode(",",
+                                $storages->map(function($storage){ return $storage->getId(); })->toArray()
+                            )));
+                    }
+
+                    break;
+            }
+        }
+
         foreach ($orders as $sort => $order){
             $qb->addOrderBy($sort, $order);
         }
@@ -109,33 +153,4 @@ class ProductRepository extends EntityRepository
 
         return new Paginator($qb->getQuery());
     }
-
-    // /**
-    //  * @return Product[] Returns an array of Product objects
-    //  */
-    /*
-    public function findByExampleField($value)
-    {
-        return $this->createQueryBuilder('p')
-            ->andWhere('p.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('p.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
-
-    /*
-    public function findOneBySomeField($value): ?Product
-    {
-        return $this->createQueryBuilder('p')
-            ->andWhere('p.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-    }
-    */
 }
