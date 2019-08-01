@@ -35,26 +35,41 @@ class ProductModelType extends AbstractType
             ->add('keywords')
             ->add('quantity')
             ->add('quantityLimitAlert')
-            ->add('categories', EntityTreeType::class, array(
-                'class' => Category::class,
+            ->add('categories', EntityType::class, array(
+                'class' => 'AppBundle\Entity\Category',
                 'query_builder' => function (EntityRepository $er) {
-                    return $er->createQueryBuilder('c');
+                    return $er->createQueryBuilder('c')
+                        ->addOrderBy('c.root', 'ASC')
+                        ->addOrderBy('c.lft', 'ASC')
+                        ;
                 },
                 'required' => false,
-                'choice_value' => 'id',
-                'choice_label' => 'label',
-                'multiple' => true,
-                'expanded' => false
+                'choice_label' => function($cat){
+                    $label = "";
+                    for($i=0;$i < $cat->getLvl();$i++){
+                        $label .= "-";
+                    }
+                    $label .= $cat->getLabel();
+                    return $label;
+                },
             ))
             ->add('storage', EntityType::class, array(
                 'class' => Storage::class,
-                'query_builder' => function (EntityRepository $er2) use ($user) {
-                    return $er2->createQueryBuilder('s')
-                        ->where("s.user = :user")->setParameter("user", $user)
-                        ->orderBy('s.label', 'ASC');
+                'query_builder' => function (EntityRepository $er) {
+                    return $er->createQueryBuilder('s')
+                        ->addOrderBy('s.root', 'ASC')
+                        ->addOrderBy('s.lft', 'ASC')
+                        ;
                 },
                 'choice_value' => 'id',
-                'choice_label' => 'label',
+                'choice_label' => function($storage){
+                    $label = "";
+                    for($i=0;$i < $storage->getLvl();$i++){
+                        $label .= "-";
+                    }
+                    $label .= $storage->getLabel();
+                    return $label;
+                },
                 'multiple' => false,
                 'expanded' => false
             ))

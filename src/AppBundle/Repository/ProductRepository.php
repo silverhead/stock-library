@@ -107,17 +107,18 @@ class ProductRepository extends EntityRepository
                     /**
                      * @var ArrayCollection
                      */
-                    $storages = $criterion->search;
+                    $categories = $criterion->search;
 
-                    if ($storages->count() == 1){
-                        $storage = $storages->first();
-                        $qb->andWhere("category.lft >= :lft")->setParameter("lft", $storage->getLft());
-                        $qb->andWhere("category.rgt <= :rgt")->setParameter("rgt", $storage->getRgt());
+                    if ($categories->count() == 1){
+                        $category = $categories->first();
+                        $qb->andWhere("category.root = :root")->setParameter("root", $category->getRoot());
+                        $qb->andWhere("category.lft >= :lft")->setParameter("lft", $category->getLft());
+                        $qb->andWhere("category.rgt <= :rgt")->setParameter("rgt", $category->getRgt());
                     }
                     else{
                         $qb->andWhere($qb->expr()->in("category.id",
                             implode(",",
-                                $storages->map(function($cat){ return $cat->getId(); })->toArray()
+                                $categories->map(function($cat){ return $cat->getId(); })->toArray()
                             )));
                     }
 
@@ -130,6 +131,7 @@ class ProductRepository extends EntityRepository
 
                     if ($storages->count() == 1){
                         $storage = $storages->first();
+                        $qb->andWhere("storage.root = :rootStorage")->setParameter("rootStorage", $storage->getRoot());
                         $qb->andWhere("storage.lft >= :lft")->setParameter("lft", $storage->getLft());
                         $qb->andWhere("storage.rgt <= :rgt")->setParameter("rgt", $storage->getRgt());
                     }
