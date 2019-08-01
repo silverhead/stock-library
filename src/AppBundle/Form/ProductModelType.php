@@ -44,6 +44,9 @@ class ProductModelType extends AbstractType
                         ;
                 },
                 'required' => false,
+                'multiple' => true,
+                'expanded' => false,
+                'choice_value' => 'id',
                 'choice_label' => function($cat){
                     $label = "";
                     for($i=0;$i < $cat->getLvl();$i++){
