@@ -5,6 +5,14 @@
 {% endif %}
 {% block title %}{{ parent() }} - {{ titlePage }} {% endblock %}
 
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('js/plugins/TreeTable.jquery.js') }}"></script>
+    <script type="application/javascript">
+        $('#categoryTable').TreeTable();
+    </script>
+{% endblock %}
+
 {% block body %}
 
 <div class="row">
@@ -24,7 +32,7 @@
 <div class="row">
     <div class="col-md-12">
         {% include 'flashMessage/flashMessageBlock.html.twig' with {'colClass':'col-lg-12'} %}
-        <table class="table">
+        <table class="table table-fixed" id="categoryTable">
             <thead>
                 <tr>
                     <th class="w-30">Libellé</th>

@@ -13,8 +13,8 @@
     <tbody>
     {% for product in products %}
         <tr>
-            <td class="w-15">{{ product.label }}</td>
-            <td class="w-15">{{ product.reference }}</td>
+            <td class="w-15">{{ product.label|truncate(100) }}</td>
+            <td class="w-15">{{ product.reference|truncate(100) }}</td>
             <td class="w-10">
                 {% if product.picture is not empty %}
                     <img src="{{ asset(product.getPictureWebPath()) }}" height="80">

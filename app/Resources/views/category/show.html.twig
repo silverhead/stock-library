@@ -9,17 +9,17 @@
 <div class="row">
     <div class="col-md-8">
         <div class="row">
+            {% if category.picture != "" %}
             <div class="col-md-6">
-                {% if category.picture != "" %}
                     <img src="{{ asset(category.getPictureWebPath()) }}" class="img-fluid border border-dark">
-                {% endif %}
             </div>
-            <div class="col-md-6">
+            {% endif %}
+            <div class="col-md-{% if category.picture != "" %}6{% else %}12{% endif %}">
                 <div class="row">
                     <div class="col-md-12">
-                        <p><a href="{{ path('category_edit', {'id': category.id}) }}" class="btn btn-warning">Modifier</a></p>
                         <h2>Description</h2>
                         <div>{{ category.description|nl2br }}</div>
+                        <br />
                     </div>
                 </div>
             </div>
@@ -32,6 +32,8 @@
         </div>
     </div>
     <div class="col-md-4">
+        <p><a href="{{ path('category_edit', {'id': category.id}) }}" class="btn btn-warning">Modifier la catégorie</a></p>
+        <p><a href="{{ path('product_new') }}?category_id={{ category.id }}" class="btn btn-success">Ajouter un nouveau produit</a></p>
         <h2>Documentations liés</h2>
         <p>{{ documentForm.addButton|raw }}</p>
         {{ documentForm.modalDocumentForm|raw }}

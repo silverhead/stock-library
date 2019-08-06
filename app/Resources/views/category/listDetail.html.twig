@@ -1,16 +1,13 @@
-<tr class="{% if subtree == true %}subTree childrenOf_{{ parent.id }}{% endif %}">
-    <td style="padding-left: {{ category.lvl * 20 }}px">{{ category.label }}</td>
-    <td>{{ category.description }}</td>
-    <td>
+<tr data-id="{{ category.id }}" data-parent="{{ category.parent.id }}" data-level="{{ category.lvl }}">
+    {#  class="{% if subtree == true %}subTree childrenOf_{{ parent.id }}{% endif %}" #}
+    <td class="w-30" data-column="name">{{ category.label|truncate(100) }}</td>
+    <td class="w-30" title="{{ category.description }}">{{ category.description|truncate(100) }}</td>
+    <td class="w-20">
         {% if category.picture is not empty %}
             <img src="{{ asset(category.getPictureWebPath) }}" style="height:100px" />
         {% endif %}
     </td>
-    <td>
-
-        {% if category.getChildren()|length > 0 %}
-            <a href="#" class="btn btn-info showChildren" data-id="{{ category.id }}"><i class="fas fa-plus-square"></i></a>
-        {% endif %}
+    <td class="w-20">
         {% include 'common/viewLink.html.twig' with {'path': path('category_show', {'id': category.id})} %}
         {% include 'common/editLink.html.twig' with {'path': path('category_edit', {'id': category.id})} %}
     </td>
