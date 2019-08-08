@@ -33,10 +33,12 @@
                         '<span id="treegrid-expander-'+ id +'" class="treegrid-expander fas fa-chevron-right" style="cursor:pointer;margin-right:5px"></span>' +
                         '');
 
+                    $columnName.css('cursor', 'pointer');
+
                     children.hide();
 
-                    $('#treegrid-expander-'+ id).on('click', function (e) {
-                        var $target = $(e.target);
+                    $columnName.on('click', function (e) {
+                        var $target = $('#treegrid-expander-'+ id);
                         if ($target.hasClass('fa-chevron-right')) {
                             $target
                                 .removeClass('fa-chevron-right')
@@ -54,7 +56,7 @@
                 }
 
                 $columnName.prepend('' +
-                    '<span class="treegrid-indent" style="width:' + 15 * level + 'px"></span>' +
+                    '<span class="treegrid-indent" style="display:inline-block;width:' + 30 * level + 'px"></span>' +
                     '');
             });
 

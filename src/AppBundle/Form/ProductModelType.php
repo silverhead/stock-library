@@ -18,7 +18,30 @@ class ProductModelType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $user = $options['user'];
+        $optionCategories = array(
+            'class' => 'AppBundle\Entity\Category',
+            'query_builder' => function (EntityRepository $er) {
+                return $er->createQueryBuilder('c')
+                    ->addOrderBy('c.root', 'ASC')
+                    ->addOrderBy('c.lft', 'ASC')
+                    ;
+            },
+            'required' => false,
+            'multiple' => true,
+            'expanded' => false,
+            'choice_value' => 'id',
+            'choice_label' => function($cat){
+                $label = "";
+                for($i=0;$i < $cat->getLvl();$i++){
+                    $label .= "-";
+                }
+                $label .= $cat->getLabel();
+                return $label;
+            }
+        );
+        if ($options['category']!=null){
+            $optionCategories['data'] = array($options['category']);
+        }
 
         $builder
             ->add('label')
@@ -35,27 +58,7 @@ class ProductModelType extends AbstractType
             ->add('keywords')
             ->add('quantity')
             ->add('quantityLimitAlert')
-            ->add('categories', EntityType::class, array(
-                'class' => 'AppBundle\Entity\Category',
-                'query_builder' => function (EntityRepository $er) {
-                    return $er->createQueryBuilder('c')
-                        ->addOrderBy('c.root', 'ASC')
-                        ->addOrderBy('c.lft', 'ASC')
-                        ;
-                },
-                'required' => false,
-                'multiple' => true,
-                'expanded' => false,
-                'choice_value' => 'id',
-                'choice_label' => function($cat){
-                    $label = "";
-                    for($i=0;$i < $cat->getLvl();$i++){
-                        $label .= "-";
-                    }
-                    $label .= $cat->getLabel();
-                    return $label;
-                },
-            ))
+            ->add('categories', EntityType::class, $optionCategories)
             ->add('storage', EntityType::class, array(
                 'class' => Storage::class,
                 'query_builder' => function (EntityRepository $er) {
@@ -83,7 +86,8 @@ class ProductModelType extends AbstractType
     {
         $resolver->setRequired(array(
             'user',
-            'picturePath'
+            'picturePath',
+            'category'
         ))
             ->setDefaults([
             'data_class' => ProductModel::class,

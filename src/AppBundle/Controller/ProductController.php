@@ -77,11 +77,17 @@ class ProductController extends Controller
      */
     public function new(Request $request): Response
     {
+        $cateogry = null;
+        if (null !== $request->get('category_id', null)){
+            $cateogry = $this->getDoctrine()->getRepository('AppBundle:Category')->find($request->get('category_id', null));
+        }
+
         $product = new Product();
         $productModel = new ProductModel($product, $this->getUser());
         $form = $this->createForm(ProductModelType::class, $productModel, array(
             'user' => $this->getUser(),
-            'picturePath' => $product->getPictureWebPath()
+            'picturePath' => $product->getPictureWebPath(),
+            'category' => $cateogry
         ));
         $form->handleRequest($request);
 
@@ -155,7 +161,8 @@ class ProductController extends Controller
         $productModel = new ProductModel($product, $this->getUser());
         $form = $this->createForm(ProductModelType::class, $productModel, array(
             'user' => $this->getUser(),
-            'picturePath' => $product->getPictureWebPath()
+            'picturePath' => $product->getPictureWebPath(),
+            'category' => null
         ));
         $form->handleRequest($request);
 
